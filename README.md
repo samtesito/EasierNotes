@@ -5,6 +5,7 @@ Desarrollado por:
 - Matías León.
 - Samuel Parra.
 - Germán Parra.
+
 Toda la documentación asociada al proyecto se encuentra a continuación:
 - Brief: https://docs.google.com/document/d/1kKiqpmyRF2VCMVCEBb4H9_yzGRmvdrw7/edit?usp=sharing&ouid=107759610782269659339&rtpof=true&sd=true
 - ERS: https://docs.google.com/document/d/1iPbqrAr4tbVDqpX_-IkOo_xstmVkIE_kn7lSODZabl8/edit?usp=sharing
