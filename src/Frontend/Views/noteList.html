@@ -1,4 +1,24 @@
 
+<header class="container-fluid d-flex justify-content-between bg-light py-4">
+
+    <div class="d-flex">
+       <input class="form-control me-2 py-2 header-text " type="search" placeholder="Buscar Nota" aria-label="Search"/>
+       <button class="btn btn-outline-success header-text" id="search-note">
+            <i class="bi bi-search"></i>
+       </button>
+    </div>
+
+    <div class="d-flex">
+        <button class="btn btn-primary me-2 py-2 header-text" id="add-note">
+            <i class="bi bi-plus"></i>
+            <span>Agregar Nota</span>
+        </button>
+        <button class="btn btn-secondary py-2 header-text" id="add-category">
+            <i class="bi bi-trash"></i>
+            <span>Eliminar Nota</span>
+        </button>
+    </div>
+</header>
 <!-- Lista de notas que se cargan en la funcion render-->
 <ul id="notes-list">
 </ul>

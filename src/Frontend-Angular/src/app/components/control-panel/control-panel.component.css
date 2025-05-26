@@ -1,19 +1,4 @@
-body {
-  display: flex; 
-  }
 
-
-.main-font {
-  font-family: 'Montserrat', Segoe UI;
-  font-weight: 500;
-}
-
-#main-frame{
-  flex: 1;
-  margin-left: 20vw;
-  padding: 1rem;
-  background-color: #ffffff;
-}
     
 #panel-selector{
   width: 20vw;
@@ -32,8 +17,3 @@ body {
   background-color: #f4f5f6;
   border-radius: 4px;
 }
-
-.header-text {
-  font-size: 1rem;
-}
-

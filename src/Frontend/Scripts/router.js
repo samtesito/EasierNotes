@@ -9,7 +9,7 @@ window.Router = {
     // Se obtiene el hash del path
     const hash = window.location.hash;
 
-    if(hash.match(/^#\/note\/(\d+)$/)){
+    if(hash.match(/^#\/note\/(\d+)$/)){ 
         const id = hash.split('/')[2];
         NoteParticular.render(id);
         return;

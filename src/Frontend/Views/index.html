@@ -8,10 +8,13 @@
   <!-- Bootstrap 5 CSS-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
     <!-- Estilos personalizados -->
   <link rel="stylesheet" href="../Styles/styles.css">
 
-     <!-- Fuente Montserrat de Google Fonts -->
+  <!-- Fuente Montserrat de Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
 </head>
@@ -21,22 +24,37 @@
   <div id="panel-selector">
     <h5 class="mb-4 fs-3 main-font ps-3">Easier Notes</h5>
     <ul class="nav flex-column">
-      <li class="nav-item fs-5"><a href="#/notes" class="nav-link text-dark">Notas</a></li>
-      <li class="nav-item  fs-5"><a href="#/categories" class="nav-link text-dark">Categorias</a></li>
+      <li class="nav-item fs-5">
+        <a href="#/notes" class="nav-link text-dark">
+        <i class="bi bi-file-earmark-text"></i>
+        <span>Notas</span>
+        </a>
+      </li>
+      <li class="nav-item  fs-5">
+        <a href="#/categories" class="nav-link text-dark">
+          <i class="bi bi-journals"></i>
+          <span>Categorias</span>
+        </a>
+    </li>
+
     </ul>
   </div>
 
   <!-- Contenido principal -->
-  <div id="main-frame"></div>
+  <div id="main-frame" class="p-0">
+    
+  </div>
 
 
   
     
+
+  
   <!-- jQuery 3.7 -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <!-- Bootstrap JS (para la animacion de modales y componentes dinámicos)-->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  
+
 
   <!--  cargas los datos -->
   <script src="../Scripts/Data/mockData.js"></script>

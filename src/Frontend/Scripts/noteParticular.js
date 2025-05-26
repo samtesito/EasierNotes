@@ -14,5 +14,7 @@ window.NoteParticular = {
                 $('#note-content').html("<p>La nota solicitada no existe.</p>");
             }
         });
-    }
+    },
+
 }
+
