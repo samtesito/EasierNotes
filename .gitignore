@@ -3,3 +3,5 @@ src/backend/bin/Debug/net8.0/backend.dll
 src/backend/bin/Debug/net8.0/backend.dll
 *.dll
 
+src/Backend/obj/Debug/net8.0/backend.AssemblyInfoInputs.cache
+src/Backend/obj/Debug/net8.0/backend.AssemblyInfo.cs
