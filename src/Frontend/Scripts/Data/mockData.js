@@ -1,4 +1,4 @@
-const mockNotas = [
+  window.MockNotes = [
     {
       id: 1,
       name: "Ideas para el proyecto de fin de curso",
