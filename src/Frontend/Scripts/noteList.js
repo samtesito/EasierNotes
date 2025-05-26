@@ -1,9 +1,20 @@
 
 window.NoteList = {
+
     render: function() {
-        let html = `<p> Logica para cargar html de notas </p>`;
+        $('#main-frame').load("../Views/noteList.html", function() {
+            const notes = MockNotes;
+            console.log("Notas cargadas:", notes);
 
-        $('#main-frame').html(html);
-
+            for (const note of notes) {
+                const noteItem = `
+                    <li class="my-5">
+                        <h3>${note.name}</h3>
+                        <a href="#/note/${note.id}">Ver Detalles<a/>
+                    </li>
+                `;
+                $('#notes-list').append(noteItem);
+            }
+        });
     }
 }
