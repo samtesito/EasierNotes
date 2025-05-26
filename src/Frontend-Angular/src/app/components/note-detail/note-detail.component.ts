@@ -1,4 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { NotesService } from '../../services/notes.service';
+import { Note } from '../../models/Note';
+
 
 @Component({
   selector: 'app-note-detail',
@@ -8,5 +12,17 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteDetailComponent {
+  noteService = inject(NotesService);
+  notes = this.noteService.MockNotes;
+  route = inject(ActivatedRoute);
+
+  noteId!: number;
+  note!: Note;
+
+  constructor(){
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.noteId = idParam ? parseInt(idParam, 10) : 0;
+    this.note = this.notes.find(note => note.Id === this.noteId) || this.notes[0];
+  }
 
 }

@@ -4,5 +4,20 @@
 }
 
 .card-note{
-  min-height: 20vh;
+  min-height: 15vh;
+}
+
+.card-note:hover {
+  background-color: #f7f8f9;
+}
+
+.card-note.selected {
+  border-left: 4px solid #087E8B;
+  background-color: #eafcfd;    
+  box-shadow: 0 6px 20px rgba(8,126,139, .2);
+}
+
+.card-note.selected .card-body {
+  transform: scale(1.01);
+  transition: transform .15s ease;
 }
