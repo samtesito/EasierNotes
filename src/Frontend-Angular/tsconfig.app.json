@@ -7,10 +7,11 @@
     "types": []
   },
   "files": [
-    "src/main.ts"
+    "src/main.ts",
+    "src/typings.d.ts"
+
   ],
   "include": [
     "src/**/*.ts",
-    "src/typings/**/*.d.ts"  
   ]
 }

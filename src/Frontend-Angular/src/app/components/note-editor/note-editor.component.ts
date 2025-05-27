@@ -1,78 +1,73 @@
-// import { Component, Input, Output, EventEmitter } from '@angular/core';
-// import { FormsModule } from '@angular/forms';
-// import { CommonModule } from '@angular/common';
-// import { QuillModule} from 'ngx-quill';
+import { Component, AfterViewInit } from '@angular/core';
+import { QuillModule }   from 'ngx-quill';
+import { FormsModule } from '@angular/forms';
 
-// import Quill from 'quill';
-// import BetterTable from 'quill-better-table';
-// Quill.register({ 'modules/better-table': BetterTable }, true);
+import Quill from 'quill';
+import QuillBetterTable from 'quill-better-table';
 
-// // Registra el módulo de tablas en Quill
-// Quill.register({
-//   'modules/better-table': BetterTable
-// }, true);
+// Registra el módulo una sola vez
+Quill.register('modules/better-table', QuillBetterTable);
 
-// @Component({
-//   selector: 'app-note-editor',
-//   standalone: true,
-//   imports: [CommonModule, FormsModule, QuillModule],
-//   template: `
-//     <quill-editor
-//       [(ngModel)]="content"
-//       [modules]="modules"
-//       theme="snow"
-//       style="height: 300px">
-//     </quill-editor>
-//   `
-// })
-// export class NoteEditorComponent {
-//   content =  ;
-//   @Output() contentChange = new EventEmitter<string>();
+@Component({
+  selector: 'app-note-editor',
+  standalone: true,
+  imports: [QuillModule, FormsModule],
+  templateUrl: './note-editor.component.html',
+  styleUrls: ['./note-editor.component.css']
+})
+export class NoteEditorComponent implements AfterViewInit {
+  content = '';
+  private quillEditor!: Quill;
 
-//   modules = {
-//     // La barra de herramientas
-//     toolbar: {
-//       container: [
-//         ['bold', 'italic', 'underline'],
-//         [{ header: [1, 2, 3, false] }],
-//         ['link', 'image'],
-//         [{ list: 'ordered' }, { list: 'bullet' }],
-//         ['clean'],
-//         ['table']      // nuestro botón “table”
-//       ],
-//       handlers: {
-//         // Cuando el usuario hace clic en “table”:
-//         'table': () => {
-//           const range = this.quillEditor.getSelection();
-//           if (range) {
-//             // Inserta una tabla 3x3
-//             this.quillEditor.getModule('better-table').insertTable(3, 3);
-//           }
-//         }
-//       }
-//     },
-//     // Configuración del plugin de tablas
-//     'better-table': {
-//       operationMenu: {
-//         items: {
-//           row: { delete: true, insertAbove: true, insertBelow: true },
-//           column: { delete: true, insertLeft: true, insertRight: true },
-//           cell: { merge: true, split: true }
-//         }
-//       }
-//     },
-//     // Keybindings para navegar dentro de tablas
-//     keyboard: {
-//       bindings: BetterTable.keyboardBindings
-//     }
-//   };
+  modules = {
+    toolbar: {
+      container: '#toolbar',
+      handlers: {
+        // Quill va a buscar estos cuatro handlers:
+        addColumn: () => this.addColumn(),
+        addRow:    () => this.addRow(),
+        // “image” ya es nativo, no hace falta handler
+      }
+    },
+    'better-table': {
+      operationMenu: {
+        items: {
+          insertRowBelow:   true,
+          insertColumnRight:true,
+          deleteRow:        true,
+          deleteColumn:     true,
+          deleteTable:      true
+        }
+      }
+    },
+    keyboard: {
+      bindings: QuillBetterTable.keyboardBindings
+    }
+  };
 
-//   // Referencia interna al editor para acceder al módulo
-//   private quillEditor!: any;
-//   onEditorCreated(editor: any) {
-//     this.quillEditor = editor;
-//     editor.on('text-change', () => {
-//       this.contentChange.emit(editor.getData());
-//     });
-//   }
-// }
+  ngAfterViewInit() {
+    // nada aquí; Quill se inicializa vía (onEditorCreated)
+  }
+
+  onEditorCreated(editor: Quill) {
+    this.quillEditor = editor;
+  }
+
+  private addColumn() {
+    const tableModule = this.quillEditor.getModule('better-table') as any;
+    if (typeof tableModule.insertColumnRight === 'function') {
+      tableModule.insertColumnRight();
+    } else {
+      console.warn('insertColumnRight no disponible en este módulo.');
+    }
+  }
+
+  private addRow() {
+    const tableModule = this.quillEditor.getModule('better-table') as any;
+    if (typeof tableModule.insertRowBelow === 'function') {
+      tableModule.insertRowBelow();
+    } else {
+      console.warn('insertRowBelow no disponible en este módulo.');
+    }
+  }
+}

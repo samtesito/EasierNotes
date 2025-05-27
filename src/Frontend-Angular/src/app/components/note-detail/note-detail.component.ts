@@ -2,27 +2,30 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NotesService } from '../../services/notes.service';
 import { Note } from '../../models/Note';
-
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-note-detail',
+  standalone: true,
   imports: [],
   templateUrl: './note-detail.component.html',
-  styleUrl: './note-detail.component.css',
+  styleUrls: ['./note-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteDetailComponent {
-  noteService = inject(NotesService);
-  notes = this.noteService.MockNotes;
-  route = inject(ActivatedRoute);
+  private noteService = inject(NotesService);
+    private sanitizer   = inject(DomSanitizer);
 
-  noteId!: number;
+  private route       = inject(ActivatedRoute);
+
   note!: Note;
+  sanitizedHtml!: SafeHtml;
 
-  constructor(){
+  constructor() {
     const idParam = this.route.snapshot.paramMap.get('id');
-    this.noteId = idParam ? parseInt(idParam, 10) : 0;
-    this.note = this.notes.find(note => note.Id === this.noteId) || this.notes[0];
+    const noteId   = idParam ? +idParam : NaN;
+    const allNotes = this.noteService.MockNotes;
+    this.note = allNotes.find(n => n.Id === noteId) || allNotes[0];
+    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.note.Html);
   }
-
 }

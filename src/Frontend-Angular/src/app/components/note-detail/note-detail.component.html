@@ -1,8 +1,7 @@
-<section class="container">
-    <h1 class="main-font mb-4"> {{note.Name}} </h1>
-    <div class="content">
-    <!-- <app-note-editor
-      [content]="note.Html">
-    </app-note-editor>  -->
-    </div>
+<section class="container-fluid my-4 mx-5">
+  <h1 class="main-font mb-5">{{ note.Name }}</h1>
+
+  <!-- inyecta el HTML ya saneado -->
+  <div class="content" [innerHTML]="sanitizedHtml"></div>
 </section>
+
