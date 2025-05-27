@@ -43,7 +43,7 @@
     <div class="card-body">
       <app-note-name
       [currentName]="note.Name"
-        [viewMode]="'Detail'"
+        [viewMode]="'List'"
         (newName)="changeNoteName($event, note)" >
       </app-note-name>
       <p class="card-text">{{ displayContentOverview(note.Html) }}</p>

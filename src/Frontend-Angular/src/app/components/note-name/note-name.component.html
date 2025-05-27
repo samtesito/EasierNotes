@@ -8,7 +8,9 @@
          (keyup)="handleKeyDown($event)" />
 </form>
 }@else{
-  <h1 (click)="enableEdit();" class="main-font">
+  <h1 (click)="enableEdit();" class="main-font"
+      [style.font-size]="viewMode() === 'Detail'? '35px': '25px'">
+    
     {{ currentName() }}
   </h1>
 }

@@ -16,11 +16,11 @@ export class NoteListComponent {
   notesService = inject(NotesService);  
   modalService = inject(ModalService); 
   router = inject(Router);
-  notesOriginal = this.notesService.MockNotes;
+  notesOriginal = this.notesService.Notes;
   
   searchTerm = signal<string>('');
 
-  notes = computed(() => this.notesOriginal.filter(note =>{
+  notes = computed(() => this.notesOriginal().filter(note =>{
     if (this.searchTerm().length === 0) return true;
     return (note.Name.toLowerCase().includes(this.searchTerm().toLowerCase()));
   }));
@@ -76,7 +76,7 @@ openDeleteModal(){
 
 deleteNote() {
   if (this.selectedNote() !== null) {
-    this.notesOriginal = this.notesOriginal.filter(note => note.Id !== this.selectedNote()?.Id);
+    this.notesOriginal.set(this.notesOriginal().filter(note => note.Id !== this.selectedNote()?.Id));
     //Se actualiza el searchTerm para que se actualice la lista de notas
     this.searchTerm.set(this.searchTerm());
     
@@ -92,20 +92,21 @@ return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 createNote(){
+  const Id = this.getRandomInt(0, 100);
   let newNote: Note ={
-    Id: this.getRandomInt(0,100),
-    Name: '',
-    Html: '',
+    Id: Id,
+    Name: `Sin título (${Id})`,
+    Html: '<p> Comienza a plasmar tus ideas aquí...</p>',
     CategoryId: 1,
   }
-  this.notesOriginal.push(newNote);
+  this.notesOriginal().push(newNote);
   this.openNote(newNote.Id);
 }
 
 changeNoteName(newName: string, note: Note) {
   if (newName && newName.trim() !== '') {
     note.Name = newName;
-    this.notesOriginal = this.notesOriginal.map(n => n.Id === note.Id ? note : n);
+    this.notesOriginal.set(this.notesOriginal().map(n => n.Id === note.Id ? note : n));
 
     //TODO conectar back
   }

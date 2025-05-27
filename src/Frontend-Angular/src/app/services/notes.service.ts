@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Note } from '../models/Note';
 
 @Injectable({
@@ -6,7 +6,7 @@ import { Note } from '../models/Note';
 })
 export class NotesService {
   
-  readonly MockNotes: Note[] = [
+  Notes = signal<Note[]>([
     {
       Id: 1,
       Name: "Ideas para el proyecto de fin de curso",
@@ -88,6 +88,6 @@ export class NotesService {
              <p>Incluir capturas, ejemplos y métricas del backend.</p>`,
       CategoryId: 1
     }
-  ];
+  ]);
 
 }

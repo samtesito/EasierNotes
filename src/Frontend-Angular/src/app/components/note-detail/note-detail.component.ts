@@ -24,7 +24,7 @@ export class NoteDetailComponent {
   constructor() {
     const idParam = this.route.snapshot.paramMap.get('id');
     const noteId   = idParam ? +idParam : NaN;
-    const allNotes = this.noteService.MockNotes;
+    const allNotes = this.noteService.Notes();
     this.note = allNotes.find(n => n.Id === noteId) || allNotes[0];
     this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.note.Html);
   }
