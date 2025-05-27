@@ -37,7 +37,7 @@
   <div
     class="card w-75 card-note d-flex flex-direction mb-3"
     (click)="selectNote(note)"
-    (dblclick)="openNote(note.Id)"
+    (dblclick)="openNote(note.Id!)"
     [class.selected-note]="isSelected(note)"
   >
     <div class="card-body">

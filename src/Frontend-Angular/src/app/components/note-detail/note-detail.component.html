@@ -5,7 +5,11 @@
       (newName)="changeNoteName($event)" >
 </app-note-name>
 
-  <!-- inyecta el HTML ya saneado -->
-  <div class="content mt-5" [innerHTML]="sanitizedHtml"></div>
+<div class="content mt-5" [innerHTML]="sanitizedHtml"></div>
 </section>
 
+
+<app-note-editor
+  [contentInput]="note.Html"
+  (save)="onSaveHtml($event)"
+></app-note-editor>

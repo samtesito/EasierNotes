@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { NotesService } from '../../services/notes.service';
 import { Note } from '../../models/Note';
 import { Router } from '@angular/router';
@@ -12,16 +12,20 @@ import { NoteNameComponent } from '../note-name/note-name.component';
   styleUrl: './note-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NoteListComponent {
+export class NoteListComponent implements OnInit {
   notesService = inject(NotesService);  
   modalService = inject(ModalService); 
   router = inject(Router);
-  notesOriginal = this.notesService.Notes;
   
   searchTerm = signal<string>('');
 
-  notes = computed(() => this.notesOriginal().filter(note =>{
+  ngOnInit() {
+    this.notesService.obtainAll();
+  }
+
+  notes = computed(() => this.notesService.Notes().filter(note =>{
     if (this.searchTerm().length === 0) return true;
+    
     return (note.Name.toLowerCase().includes(this.searchTerm().toLowerCase()));
   }));
 
@@ -76,39 +80,29 @@ openDeleteModal(){
 
 deleteNote() {
   if (this.selectedNote() !== null) {
-    this.notesOriginal.set(this.notesOriginal().filter(note => note.Id !== this.selectedNote()?.Id));
-    //Se actualiza el searchTerm para que se actualice la lista de notas
-    this.searchTerm.set(this.searchTerm());
-    
     this.unselectNote();
-    //TODO: peticion delete al backend
+    this.notesService.delete(this.selectedNote()?.Id!);
   } 
 }
 
-private getRandomInt(min: number, max: number): number {
-min = Math.ceil(min);
-max = Math.floor(max);
-return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+
 
 createNote(){
-  const Id = this.getRandomInt(0, 100);
+
   let newNote: Note ={
-    Id: Id,
-    Name: `Sin título (${Id})`,
+    Id: null,
+    Name: `Nota nueva`,
     Html: '<p> Comienza a plasmar tus ideas aquí...</p>',
     CategoryId: 1,
   }
-  this.notesOriginal().push(newNote);
-  this.openNote(newNote.Id);
+  newNote = this.notesService.create(newNote)
+  this.openNote(newNote.Id!);
 }
 
 changeNoteName(newName: string, note: Note) {
   if (newName && newName.trim() !== '') {
     note.Name = newName;
-    this.notesOriginal.set(this.notesOriginal().map(n => n.Id === note.Id ? note : n));
-
-    //TODO conectar back
+    this.notesService.update(note.Id!, note);
   }
 }
 

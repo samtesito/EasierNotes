@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Note } from '../models/Note';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -8,29 +8,40 @@ import { Observable } from 'rxjs';
 })
 export class NotesService {
   
-  constructor(){}
   private http = inject(HttpClient);
-  private URLbase = "http://localhost:4200/api/notes";
+  private URLbase = "http://localhost:5219/api/notes";
 
-  public obtainAll(): Observable<Note[]>{
-    return this.http.get<Note[]>(this.URLbase);
+  Notes = signal<Note[]>([]);
+
+  public obtainAll(): void {
+    this.http.get<Note[]>(this.URLbase).subscribe((response) => 
+      { 
+        this.Notes.set(response);
+        console.log("Notas obtenidas:", this.Notes());
+       });
   }
 
-  public obtainById(id: number): Observable<Note>{
-    return this.http.get<Note>('$(this.URLbase)/$(id)');
-  }
-
-  public create(note: Note){
-    return this.http.post(this.URLbase, note);
+  public create(note: Note): Note {
+    let createdNote: Note | null = null;
+    this.http.post<Note>(this.URLbase, note).subscribe((response) => {
+      const currentNotes = this.Notes();
+      response.Name = `Sin título (${response.Id})`
+      this.Notes.set([...currentNotes, response]);
+      createdNote = response;
+    });
+    return createdNote!;
   }
 
   public update(id: number, note:Note){
-    return this.http.put('$(this.URLbase)/$(id)', note);
-  }
+    return this.http.put('$(this.URLbase)/$(id)', note).subscribe((response) => {
+      this.Notes.set(this.Notes().map(n => n.Id === id ? note : n));
+  });
+}
 
   public delete(id: number){
-    
-  }
+    return this.http.delete('$(this.URLbase)/$(id)').subscribe(() => {
+      this.Notes.set(this.Notes().filter(n => n.Id !== id));
+  });}
 
   readonly MockNotes: Note[] = [
     {
