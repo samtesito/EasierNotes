@@ -33,20 +33,20 @@
 </header>
 
 <section class="container mx-5 px-3">
-  @for (note of notes(); track note.Id) {
+  @for (note of notes(); track note.id) {
   <div
     class="card w-75 card-note d-flex flex-direction mb-3"
     (click)="selectNote(note)"
-    (dblclick)="openNote(note.Id!)"
+    (dblclick)="openNote(note.id!)"
     [class.selected-note]="isSelected(note)"
   >
     <div class="card-body">
       <app-note-name
-      [currentName]="note.Name"
+      [currentName]="note.name"
         [viewMode]="'List'"
         (newName)="changeNoteName($event, note)" >
       </app-note-name>
-      <p class="card-text">{{ displayContentOverview(note.Html) }}</p>
+      <p class="card-text">{{ displayContentOverview(note.html) }}</p>
     </div>
   </div>
   }
@@ -79,7 +79,7 @@
 
       <div class="modal-body py-5">
         ¿Estás seguro de que deseas eliminar la nota
-        <strong>{{ selectedNote()?.Name }}</strong
+        <strong>{{ selectedNote()?.name }}</strong
         >?
       </div>
 

@@ -23,11 +23,11 @@ export class NoteListComponent implements OnInit {
     this.notesService.obtainAll();
   }
 
-  notes = computed(() => this.notesService.Notes().filter(note =>{
-    if (this.searchTerm().length === 0) return true;
-    
-    return (note.Name.toLowerCase().includes(this.searchTerm().toLowerCase()));
-  }));
+   notes = computed(() => this.notesService.Notes().filter(note =>{
+     if (this.searchTerm().length === 0) return true;
+     return (note.name.toLowerCase().includes(this.searchTerm().toLowerCase()));
+   }));
+
 
   selectedNote = signal<Note | null>(null);
   
@@ -52,7 +52,7 @@ export class NoteListComponent implements OnInit {
   }
 
   selectNote(selectedNote: Note){
-    if (selectedNote.Id === this.selectedNote()?.Id){
+    if (selectedNote.id === this.selectedNote()?.id){
       this.unselectNote(); 
     }else{
       this.selectedNote.set(selectedNote);
@@ -61,7 +61,7 @@ export class NoteListComponent implements OnInit {
 
   isSelected(currentNote: Note): boolean {
     let result = false;
-    if (currentNote.Id===this.selectedNote()?.Id){ 
+    if (currentNote.id===this.selectedNote()?.id){ 
       result =  true;
     } 
     return result;
@@ -81,7 +81,7 @@ openDeleteModal(){
 deleteNote() {
   if (this.selectedNote() !== null) {
     this.unselectNote();
-    this.notesService.delete(this.selectedNote()?.Id!);
+    this.notesService.delete(this.selectedNote()?.id!);
   } 
 }
 
@@ -90,19 +90,19 @@ deleteNote() {
 createNote(){
 
   let newNote: Note ={
-    Id: null,
-    Name: `Nota nueva`,
-    Html: '<p> Comienza a plasmar tus ideas aquí...</p>',
-    CategoryId: 1,
+    id: null,
+    name: `Nota nueva`,
+    html: '<p> Comienza a plasmar tus ideas aquí...</p>',
+    categoryId: 1,
   }
   newNote = this.notesService.create(newNote)
-  this.openNote(newNote.Id!);
+  this.openNote(newNote.id!);
 }
 
 changeNoteName(newName: string, note: Note) {
   if (newName && newName.trim() !== '') {
-    note.Name = newName;
-    this.notesService.update(note.Id!, note);
+    note.name = newName;
+    this.notesService.update(note.id!, note);
   }
 }
 

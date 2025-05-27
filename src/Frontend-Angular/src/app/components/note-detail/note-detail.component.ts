@@ -27,20 +27,20 @@ export class NoteDetailComponent {
     const idParam = this.route.snapshot.paramMap.get('id');
     const noteId   = idParam ? +idParam : NaN;
     const allNotes = this.noteService.Notes();
-    this.note = allNotes.find(n => n.Id === noteId) || allNotes[0];
-    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.note.Html);
+    this.note = allNotes.find(n => n.id === noteId) || allNotes[0];
+    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.note.html);
   }
 
   changeNoteName(newName: string) {
     if (newName.trim()) {
-      this.note.Name = newName.trim();
-      this.noteService.update(this.note.Id!, this.note);
+      this.note.name = newName.trim();
+      this.noteService.update(this.note.id!, this.note);
     }
   }
 
   onSaveHtml(newContent: string) {
-      this.note.Html = newContent.trim();
-        this.noteService.update(this.note.Id!, this.note);
+      this.note.html = newContent.trim();
+        this.noteService.update(this.note.id!, this.note);
   }
 
 }
