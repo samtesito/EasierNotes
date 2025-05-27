@@ -25,11 +25,12 @@
   </div>
 </header>
 
-<section class="container mx-5 px-3" (click)="unselectNote()">
+<section class="container mx-5 px-3">
   @for (note of notes; track note.Id) {
   <div
     class="card w-75 card-note d-flex flex-direction mb-3"
     (click)="selectNote(note)"
+    (dblclick)="openNote(note.Id)"
     [class.selected-note]="isSelected(note)"
   >
     <div class="card-body">
@@ -39,3 +40,4 @@
   </div>
   }
 </section>
+s

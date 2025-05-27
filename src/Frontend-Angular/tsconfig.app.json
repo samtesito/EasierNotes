@@ -8,8 +8,6 @@
   },
   "files": [
     "src/main.ts",
-    "src/typings.d.ts"
-
   ],
   "include": [
     "src/**/*.ts",
