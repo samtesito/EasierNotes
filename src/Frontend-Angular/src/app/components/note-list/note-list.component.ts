@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { NotesService } from '../../services/notes.service';
 import { Note } from '../../models/Note';
 import { Router } from '@angular/router';
@@ -15,16 +15,32 @@ export class NoteListComponent {
   notesService = inject(NotesService);  
   modalService = inject(ModalService); 
   router = inject(Router);
-  notes = this.notesService.MockNotes;
+  notesOriginal = this.notesService.MockNotes;
+  
+  searchTerm = signal<string>('');
+
+  notes = computed(() => this.notesOriginal.filter(note =>{
+    if (this.searchTerm().length === 0) return true;
+    return (note.Name.toLowerCase().includes(this.searchTerm().toLowerCase()));
+  }));
+
   selectedNote = signal<Note | null>(null);
+  
 
   displayContentOverview(html: string): string {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
     const contentOverview = doc.body.textContent || '';
-
+    
     return  contentOverview.length > 100 ? contentOverview.substring(0, 100) + '...' : contentOverview
   };
+  
+  updateSearchTerm(value: string | null) {
+    if (value === null) 
+      this.searchTerm.set('');
+     else 
+      this.searchTerm.set(value);
+  }
 
   unselectNote(){
     this.selectedNote.set(null);
@@ -59,7 +75,10 @@ openDeleteModal(){
 
 deleteNote() {
   if (this.selectedNote() !== null) {
-    this.notes = this.notes.filter(note => note.Id !== this.selectedNote()?.Id);
+    this.notesOriginal = this.notesOriginal.filter(note => note.Id !== this.selectedNote()?.Id);
+    //Se actualiza el searchTerm para que se actualice la lista de notas
+    this.searchTerm.set(this.searchTerm());
+    
     this.unselectNote();
     //TODO: peticion delete al backend
   } 
