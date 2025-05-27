@@ -1,7 +1,10 @@
-<form [class.hidden]="editingMode">
-  <label for="name">{{ currentName }}</label>
-  <input type="text" id="name" placeholder="currentName" />
+@if (editingMode()) {
+<form>
+  <input type="text" value="{{currentName()}}" id="inputNoteName" placeholder="currentName" />
 </form>
-<h1 (click)="alternateEditingMode()" [class.hidden]="!editingMode">
-  {{ currentName }}
-</h1>
+}@else{
+  <h1 (click)="alternateEditingMode(); focusInput();" class="main-font">
+    {{ currentName() }}
+  </h1>
+}
+

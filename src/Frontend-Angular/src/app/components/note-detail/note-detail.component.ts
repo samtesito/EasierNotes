@@ -3,20 +3,20 @@ import { ActivatedRoute } from '@angular/router';
 import { NotesService } from '../../services/notes.service';
 import { Note } from '../../models/Note';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NoteNameComponent } from "../note-name/note-name.component";
 
 @Component({
   selector: 'app-note-detail',
   standalone: true,
-  imports: [],
+  imports: [NoteNameComponent],
   templateUrl: './note-detail.component.html',
   styleUrls: ['./note-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteDetailComponent {
   private noteService = inject(NotesService);
-    private sanitizer   = inject(DomSanitizer);
-
-  private route       = inject(ActivatedRoute);
+  private sanitizer = inject(DomSanitizer);
+  private route = inject(ActivatedRoute);
 
   note!: Note;
   sanitizedHtml!: SafeHtml;
