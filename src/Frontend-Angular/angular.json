@@ -36,6 +36,8 @@
               }
             ],
             "styles": [
+              "node_modules/quill/dist/quill.snow.css",
+              "node_modules/quill-better-table/dist/quill-better-table.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],

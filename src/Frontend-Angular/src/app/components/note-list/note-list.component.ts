@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NotesService } from '../../services/notes.service';
 import { Note } from '../../models/Note';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-note-list',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './note-list.component.html',
   styleUrl: './note-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
