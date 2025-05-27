@@ -1,9 +1,14 @@
 @if (editingMode()) {
-<form>
-  <input type="text" value="{{currentName()}}" id="inputNoteName" placeholder="currentName" />
+<form (submit)="$event.preventDefault()">
+  <input type="text" 
+         value="{{currentName()}}" 
+         id="inputNoteName" placeholder="Nombre de la Nota"
+         [style.font-size]="viewMode() === 'Detail'? '35px': '25px'"
+         maxlength="50"
+         (keyup)="handleKeyDown($event)" />
 </form>
 }@else{
-  <h1 (click)="alternateEditingMode(); focusInput();" class="main-font">
+  <h1 (click)="enableEdit();" class="main-font">
     {{ currentName() }}
   </h1>
 }
