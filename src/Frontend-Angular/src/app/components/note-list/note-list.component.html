@@ -1,7 +1,7 @@
 <header
   class="container-fluid d-flex justify-content-between bg-light px-5 py-4 mb-5"
 >
-  <div class="d-flex">
+  <div class="d-flex" (click)="unselectNote()">
     <input
       class="form-control me-2 py-2 header-text"
       type="search"
@@ -25,12 +25,12 @@
   </div>
 </header>
 
-<section class="container mx-5 px-3">
+<section class="container mx-5 px-3" (click)="unselectNote()">
   @for (note of notes; track note.Id) {
   <div
     class="card w-75 card-note d-flex flex-direction mb-3"
     (click)="selectNote(note)"
-    [class.selected-note]="selectedNote()?.Id === note.Id"
+    [class.selected-note]="isSelected(note)"
   >
     <div class="card-body">
       <h5 class="card-title main-font mb-2 mt-2">{{ note.Name }}</h5>
