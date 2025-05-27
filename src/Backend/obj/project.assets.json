@@ -2550,19 +2550,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\matia\\.nuget\\packages\\": {}
+    "C:\\Users\\samue\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\matia\\Projects\\EasierNotes\\src\\Backend\\backend.csproj",
+      "projectUniqueName": "C:\\Users\\samue\\Desktop\\EasierNotes\\src\\Backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "C:\\Users\\matia\\Projects\\EasierNotes\\src\\Backend\\backend.csproj",
-      "packagesPath": "C:\\Users\\matia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\matia\\Projects\\EasierNotes\\src\\Backend\\obj\\",
+      "projectPath": "C:\\Users\\samue\\Desktop\\EasierNotes\\src\\Backend\\backend.csproj",
+      "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\samue\\Desktop\\EasierNotes\\src\\Backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\matia\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\samue\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"

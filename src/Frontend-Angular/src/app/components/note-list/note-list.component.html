@@ -1,32 +1,41 @@
-<header class="container-fluid d-flex justify-content-between bg-light px-5 py-4 mb-5">
+<header
+  class="container-fluid d-flex justify-content-between bg-light px-5 py-4 mb-5"
+>
+  <div class="d-flex">
+    <input
+      class="form-control me-2 py-2 header-text"
+      type="search"
+      placeholder="Buscar Nota"
+      aria-label="Search"
+    />
+    <button class="btn btn-outline-primary header-text" id="search-note">
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
 
-    <div class="d-flex">
-       <input class="form-control me-2 py-2 header-text " type="search" placeholder="Buscar Nota" aria-label="Search"/>
-       <button class="btn btn-outline-primary header-text" id="search-note">
-            <i class="bi bi-search"></i>
-       </button>
-    </div>
-
-    <div class="d-flex">
-        <button class="btn btn-primary  py-2 px-3 me-3 header-text" id="add-note">
-            <i class="bi bi-plus me-2"></i>
-            <span>Agregar Nota</span>
-        </button>
-        <button class="btn btn-secondary py-2 px-3  header-text" id="add-category">
-            <i class="bi bi-trash me-2"></i>
-            <span>Eliminar Nota</span>
-        </button>
-    </div>
+  <div class="d-flex">
+    <button class="btn btn-primary py-2 px-3 me-3 header-text" id="add-note">
+      <i class="bi bi-plus me-2"></i>
+      <span>Agregar Nota</span>
+    </button>
+    <button class="btn btn-secondary py-2 px-3 header-text" id="add-category">
+      <i class="bi bi-trash me-2"></i>
+      <span>Eliminar Nota</span>
+    </button>
+  </div>
 </header>
 
 <section class="container mx-5 px-3">
-    @for (note of notes; track note.Id) {
-    <div class="card w-75 card-note d-flex flex-direction mb-3" >
-        <div class="card-body">
-        <h5 class="card-title main-font mb-2 mt-2">{{note.Name}}</h5>
-        <p class="card-text">{{displayContentOverview(note.Html)}}</p>
-        </div>
+  @for (note of notes; track note.Id) {
+  <div
+    class="card w-75 card-note d-flex flex-direction mb-3"
+    (click)="selectNote(note)"
+    [class.selected-note]="selectedNote()?.Id === note.Id"
+  >
+    <div class="card-body">
+      <h5 class="card-title main-font mb-2 mt-2">{{ note.Name }}</h5>
+      <p class="card-text">{{ displayContentOverview(note.Html) }}</p>
     </div>
-    }
-
+  </div>
+  }
 </section>
