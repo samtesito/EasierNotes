@@ -1,31 +1,36 @@
-import { ChangeDetectionStrategy, Component, input, OnInit, output, signal } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+  AfterViewInit
+} from '@angular/core';
 
 @Component({
   selector: 'app-note-editor',
-  imports: [],
+  standalone: true,
   templateUrl: './note-editor.component.html',
-  styleUrl: './note-editor.component.css',
+  styleUrls: ['./note-editor.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NoteEditorComponent implements OnInit {
+export class NoteEditorComponent implements AfterViewInit {
+  @Input() contentInput = '';              // HTML que llega desde el padre
+  @Output() save = new EventEmitter<string>();
 
-  contentInput = input<string>('');
-  content = signal<string>(this.contentInput());
+  @ViewChild('editor', { static: true })
+  private editor!: ElementRef<HTMLDivElement>;
 
-  save = output<string>();
+  ngAfterViewInit() {
+    this.editor.nativeElement.innerHTML = this.contentInput;
+  }
+
 
   onSave() {
-    if (this.content()) {
-      this.save.emit(this.content());
-    }
-  }
-
-  onInputChange(event: Event) {
-    const inputElement = event.target as HTMLInputElement;
-    this.content.set(inputElement.innerHTML);
-  }
-
-  ngOnInit() {
-    this.content.set(this.contentInput());
+    const html = this.editor.nativeElement.innerHTML;
+    this.save.emit(html);
   }
 }
+

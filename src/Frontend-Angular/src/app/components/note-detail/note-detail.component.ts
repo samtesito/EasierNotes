@@ -2,25 +2,22 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NotesService } from '../../services/notes.service';
 import { Note } from '../../models/Note';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { NoteNameComponent } from "../note-name/note-name.component";
 import { NoteEditorComponent } from '../note-editor/note-editor.component';
 
 @Component({
   selector: 'app-note-detail',
   standalone: true,
-  imports: [NoteNameComponent,  NoteEditorComponent],
+  imports: [NoteNameComponent, NoteEditorComponent],
   templateUrl: './note-detail.component.html',
   styleUrls: ['./note-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteDetailComponent {
   private noteService = inject(NotesService);
-  private sanitizer = inject(DomSanitizer);
   private route = inject(ActivatedRoute);
 
   note!: Note;
-  sanitizedHtml!: SafeHtml;
   
 
   constructor() {
@@ -28,7 +25,6 @@ export class NoteDetailComponent {
     const noteId   = idParam ? +idParam : NaN;
     const allNotes = this.noteService.Notes();
     this.note = allNotes.find(n => n.id === noteId) || allNotes[0];
-    this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.note.html);
   }
 
   changeNoteName(newName: string) {
@@ -39,7 +35,7 @@ export class NoteDetailComponent {
   }
 
   onSaveHtml(newContent: string) {
-      this.note.html = newContent.trim();
+      this.note.html = newContent;
         this.noteService.update(this.note.id!, this.note);
   }
 

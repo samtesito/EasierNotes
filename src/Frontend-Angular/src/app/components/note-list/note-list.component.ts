@@ -80,8 +80,8 @@ openDeleteModal(){
 
 deleteNote() {
   if (this.selectedNote() !== null) {
-    this.unselectNote();
     this.notesService.delete(this.selectedNote()?.id!);
+    this.unselectNote();
   } 
 }
 
@@ -90,18 +90,18 @@ deleteNote() {
 createNote(){
 
   let newNote: Note ={
-    id: null,
     name: `Nota nueva`,
     html: '<p> Comienza a plasmar tus ideas aquí...</p>',
     categoryId: 1,
   }
-  newNote = this.notesService.create(newNote)
-  this.openNote(newNote.id!);
+  this.notesService.create(newNote)
+
 }
 
 changeNoteName(newName: string, note: Note) {
   if (newName && newName.trim() !== '') {
     note.name = newName;
+    console.log("cambiando nombre de nota", note);
     this.notesService.update(note.id!, note);
   }
 }

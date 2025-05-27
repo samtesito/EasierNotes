@@ -1,3 +1,4 @@
+using System.Text.Json;
 using backend.PuertaDB;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,13 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod()
     );
 });
+
+builder.Services
+  .AddControllers()
+  .AddJsonOptions(opts =>
+  {
+    opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+  });
 
 //Exponer los controladores de la API
 builder.Services.AddControllers();
