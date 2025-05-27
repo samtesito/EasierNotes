@@ -84,15 +84,21 @@ deleteNote() {
   } 
 }
 
+private getRandomInt(min: number, max: number): number {
+min = Math.ceil(min);
+max = Math.floor(max);
+return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 createNote(){
   let newNote: Note ={
-    Id: 0,
+    Id: this.getRandomInt(0,100),
     Name: '',
     Html: '',
     CategoryId: 1,
   }
   this.notesOriginal.push(newNote);
-  openNote
+  this.openNote(newNote.Id);
 }
 
 }
