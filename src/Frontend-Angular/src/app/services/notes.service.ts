@@ -1,12 +1,38 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Note } from '../models/Note';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotesService {
   
-  Notes = signal<Note[]>([
+  constructor(){}
+  private http = inject(HttpClient);
+  private URLbase = "http://localhost:4200/api/notes";
+
+  public obtainAll(): Observable<Note[]>{
+    return this.http.get<Note[]>(this.URLbase);
+  }
+
+  public obtainById(id: number): Observable<Note>{
+    return this.http.get<Note>('$(this.URLbase)/$(id)');
+  }
+
+  public create(note: Note){
+    return this.http.post(this.URLbase, note);
+  }
+
+  public update(id: number, note:Note){
+    return this.http.put('$(this.URLbase)/$(id)', note);
+  }
+
+  public delete(id: number){
+    
+  }
+
+  readonly MockNotes: Note[] = [
     {
       Id: 1,
       Name: "Ideas para el proyecto de fin de curso",
@@ -88,6 +114,6 @@ export class NotesService {
              <p>Incluir capturas, ejemplos y métricas del backend.</p>`,
       CategoryId: 1
     }
-  ]);
+  ];
 
 }
