@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { NotesService } from '../../services/notes.service';
 import { Note } from '../../models/Note';
 import { Router } from '@angular/router';
+import { ModalService } from '../../helpers/modal.service';
 
 @Component({
   selector: 'app-note-list',
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class NoteListComponent {
   notesService = inject(NotesService);  
+  modalService = inject(ModalService); 
   router = inject(Router);
   notes = this.notesService.MockNotes;
   selectedNote = signal<Note | null>(null);
@@ -33,22 +35,34 @@ export class NoteListComponent {
       this.unselectNote(); 
     }else{
       this.selectedNote.set(selectedNote);
-      console.log("selectedNote", this.selectedNote());
     }
   }
 
   isSelected(currentNote: Note): boolean {
     let result = false;
-    console.log("isNull", this.selectedNote()===null);
     if (currentNote.Id===this.selectedNote()?.Id){ 
       result =  true;
     } 
-    console.log("isSelected", result, "currentNote.Id", currentNote.Id);
     return result;
   }
 
   openNote(noteId: number) {
     this.router.navigate(['/note', noteId]);
+}
+
+openDeleteModal(){
+    console.log("deleteNote");
+    if( this.selectedNote() === null) 
+      return;
+    this.modalService.open('confirmDeleteModal');
+}
+
+deleteNote() {
+  if (this.selectedNote() !== null) {
+    this.notes = this.notes.filter(note => note.Id !== this.selectedNote()?.Id);
+    this.unselectNote();
+    //TODO: peticion delete al backend
+  } 
 }
 
 }
