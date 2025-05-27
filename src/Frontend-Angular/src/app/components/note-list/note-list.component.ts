@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { NotesService } from '../../services/notes.service';
 import { Note } from '../../models/Note';
-import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-note-list',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './note-list.component.html',
   styleUrl: './note-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -24,20 +23,20 @@ export class NoteListComponent {
   };
   unselectNote(){
     this.selectedNote.set(null);
-  }
+  };
   selectNote(selectedNote: Note){
     if (selectedNote.Id === this.selectedNote()?.Id){
-      this.unselectNote; 
+      this.unselectNote(); 
     }else{
       this.selectedNote.set(selectedNote);
     }
-  }
-  alternateSelection(currentNote: Note): boolean {
+  };
+  isSelected(currentNote: Note): boolean {
     if (currentNote.Id===this.selectedNote()?.Id){ 
       return false;
     } 
     return true
-  }
+  };
   
     
 }
