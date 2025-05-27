@@ -2,12 +2,11 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NotesService } from '../../services/notes.service';
 import { Note } from '../../models/Note';
-import { NoteEditorComponent } from '../note-editor/note-editor.component';
 
 
 @Component({
   selector: 'app-note-detail',
-  imports: [NoteEditorComponent],
+  imports: [],
   templateUrl: './note-detail.component.html',
   styleUrl: './note-detail.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
