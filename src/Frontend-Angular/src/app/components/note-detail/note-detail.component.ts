@@ -28,4 +28,11 @@ export class NoteDetailComponent {
     this.note = allNotes.find(n => n.Id === noteId) || allNotes[0];
     this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.note.Html);
   }
+
+  changeNoteName(newName: string) {
+    if (newName.trim()) {
+      this.note.Name = newName.trim();
+      //TODO: agregar httpp con el back
+    }
+  }
 }

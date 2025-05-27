@@ -10,42 +10,49 @@ import { ChangeDetectionStrategy, Component, ElementRef, Host, HostListener, inj
 export class NoteNameComponent {
 
   editingMode = signal<boolean>(false);
-  currentName =  input.required<string>();
+  inputNoteName = signal<HTMLInputElement | null>(null);
+  currentName = input.required<string>();
+  viewMode = input.required<string>();
   newName = output<string>();
   elRef = inject(ElementRef);
 
-  alternateEditingMode(){
-    this.editingMode.set(!this.editingMode());
+  enableEdit() {
+    this.editingMode.set(true);
+    setTimeout(() => {
+      const input = document.getElementById('inputNoteName') as HTMLInputElement;
+      this.inputNoteName.set(input);
+      this.inputNoteName()?.focus();
+    }, 0);
   }
 
-  focusInput() {
-    const input = document.getElementById('inputNoteName') as HTMLInputElement;
-    console.log('Focusing input:', input);
-    if (input) {
-      input.focus();
-    }
-  }
+  handleKeyDown(event: KeyboardEvent) {
+    const val = this.inputNoteName()?.value.trim();
+    console.log('length', val?.length);
+    if (!val)
+      return;
 
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent) {
-   
-    const isClickInside = this.elRef.nativeElement.contains(event.target);
-
-    if (!isClickInside) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      this.newName.emit(val);
       this.editingMode.set(false);
     }
+
   }
 
-  @HostListener('enter', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
-      const input = document.getElementById('inputNoteName') as HTMLInputElement;
-      if (input) {
-        this.newName.emit(input.value);
-        console.log('Emitting new name:', input.value);
-        this.editingMode.set(false);
-      }
+
+@HostListener('document:click', ['$event'])
+onClickOutside(event: MouseEvent) {
+
+  const isClickInside = this.elRef.nativeElement.contains(event.target);
+
+  if (!isClickInside) {
+    const val = this.inputNoteName()?.value.trim();
+    if (val) {
+      this.newName.emit(val);
     }
+    this.editingMode.set(false);
   }
+}
+
 
 }
