@@ -8,5 +8,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoteNameComponent {
-
+  editingMode:boolean = false;
+  currentName:string = '';
+  alternateEditingMode(){
+    this.editingMode = !this.editingMode;
+  }
 }
