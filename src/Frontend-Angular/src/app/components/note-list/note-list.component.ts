@@ -3,10 +3,11 @@ import { NotesService } from '../../services/notes.service';
 import { Note } from '../../models/Note';
 import { Router } from '@angular/router';
 import { ModalService } from '../../helpers/modal.service';
+import { NoteNameComponent } from '../note-name/note-name.component';
 
 @Component({
   selector: 'app-note-list',
-  imports: [],
+  imports: [NoteNameComponent],
   templateUrl: './note-list.component.html',
   styleUrl: './note-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -101,5 +102,13 @@ createNote(){
   this.openNote(newNote.Id);
 }
 
+changeNoteName(newName: string, note: Note) {
+  if (newName && newName.trim() !== '') {
+    note.Name = newName;
+    this.notesOriginal = this.notesOriginal.map(n => n.Id === note.Id ? note : n);
+
+    //TODO conectar back
+  }
 }
 
+}

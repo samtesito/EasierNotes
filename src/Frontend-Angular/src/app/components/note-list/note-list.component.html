@@ -37,7 +37,11 @@
     [class.selected-note]="isSelected(note)"
   >
     <div class="card-body">
-      <h5 class="card-title main-font mb-2 mt-2">{{ note.Name }}</h5>
+      <app-note-name
+      [currentName]="note.Name"
+        [viewMode]="'Detail'"
+        (newName)="changeNoteName($event, note)" >
+      </app-note-name>
       <p class="card-text">{{ displayContentOverview(note.Html) }}</p>
     </div>
   </div>
