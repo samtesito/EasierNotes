@@ -1,0 +1,13 @@
+<div class="toolbar mb-2">
+  <button type="button" class="btn btn-light btn-sm" (click)="onSave()" title="Guardar">
+    <i class="bi bi-floppy2"></i>
+  </button>
+</div>
+
+<div
+  class="editor border p-2"
+  contenteditable="true"
+  dir="ltr"
+  [innerHTML]="content()"
+  (input)="onInputChange($event)"
+></div>
