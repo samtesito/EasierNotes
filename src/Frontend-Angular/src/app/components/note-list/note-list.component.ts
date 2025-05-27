@@ -42,7 +42,7 @@ export class NoteListComponent {
       this.searchTerm.set(value);
   }
 
-  unselectNote(){
+  private unselectNote(){
     this.selectedNote.set(null);
   }
 
@@ -82,6 +82,17 @@ deleteNote() {
     this.unselectNote();
     //TODO: peticion delete al backend
   } 
+}
+
+createNote(){
+  let newNote: Note ={
+    Id: 0,
+    Name: '',
+    Html: '',
+    CategoryId: 1,
+  }
+  this.notesOriginal.push(newNote);
+  openNote
 }
 
 }
