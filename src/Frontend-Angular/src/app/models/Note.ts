@@ -1,5 +1,5 @@
 export interface Note {
-  id: number | null;
+  id?: number;
   name: string;
   html: string;
   categoryId: number;

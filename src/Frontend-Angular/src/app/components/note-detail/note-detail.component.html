@@ -5,11 +5,7 @@
       (newName)="changeNoteName($event)" >
 </app-note-name>
 
-<div class="content mt-5" [innerHTML]="sanitizedHtml"></div>
-</section>
-
-
 <app-note-editor
   [contentInput]="note.html"
   (save)="onSaveHtml($event)"
-></app-note-editor>
+></app-note-editor> 
