@@ -1,14 +1,32 @@
 <div class="note-editor">
-  <div class="toolbar mb-2">
-    <button type="button" (click)="onSave()" title="Guardar">
-      <i class="bi bi-floppy2"></i>
-    </button>
-  </div>
-  <div
-    #editor
-    class="editor"
-    contenteditable="true"
-    dir="ltr"
-  ></div>
-</div>
+  <div class="toolbar mt-5 mb-2 border-bottom border-top border-secondary-subtle">
 
+    <!-- Insertar fila -->
+    <button type="button" #insertRowButton class="btn btn-light btn-sm me-2" (click)="onInsertRow()" [disabled]="!isEditorFocused()"
+      title="Insertar fila">
+      <img src="statics/add-row.svg" alt="Insertar fila" class="toolbar-icon">
+    </button>
+
+    <!-- Insertar columna -->
+    <button type="button" #insertColumnButton class="btn btn-light btn-sm me-2" (click)="onInsertColumn()" [disabled]="!isEditorFocused()"
+      title="Insertar columna">
+      <img src="statics/add-column.svg" alt="Insertar columna" class="toolbar-icon">
+    </button>
+
+    <!-- Botón: Insertar imagen -->
+    <button type="button" #insertImageButton class="btn btn-light btn-sm me-2" (click)="onInsertImage()"
+      [disabled]="!isEditorFocused()" title="Insertar imagen">
+      <img src="statics/picture.svg" alt="Insertar imagen" class="toolbar-icon">
+    </button>
+
+    <!-- Botón: Guardar -->
+    <button type="button" class="btn btn-light btn-sm" (click)="onSave()" title="Guardar">
+      <img src="statics/save.svg" alt="Guardar" class="toolbar-icon">
+    </button>
+
+    <!-- Input oculto para elegir fichero -->
+    <input type="file" #fileInput accept="image/*" style="display:none" (change)="onFileSelected($event)" />
+  </div>
+
+  <div #editor class="editor" contenteditable="true" dir="ltr"></div>
+</div>
