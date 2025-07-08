@@ -12,6 +12,10 @@ export const routes: Routes = [
         loadComponent: () => import('./components/note-list/note-list.component').then(r => r.NoteListComponent)
     },
     {
+        path: 'categories',
+        loadComponent: () => import('./components/category-list/category-list.component').then(r => r.CategoryListComponent)
+    },
+    {
         path: 'note/:id',
         loadComponent: () => import('./components/note-detail/note-detail.component').then(r => r.NoteDetailComponent)
     },

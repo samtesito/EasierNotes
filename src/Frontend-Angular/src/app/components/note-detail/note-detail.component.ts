@@ -29,12 +29,12 @@ export class NoteDetailComponent {
   changeNoteName(newName: string) {
     if (newName.trim()) {
       this.note.name = newName.trim();
-      this.noteService.update(this.note.id!, this.note);
+      this.noteService.update(this.note);
     }
   }
 
   onSaveHtml(newContent: string) {
     this.note.html = newContent;
-    this.noteService.update(this.note.id!, this.note);
+    this.noteService.update(this.note);
   }
 }
