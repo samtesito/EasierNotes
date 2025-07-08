@@ -1,14 +1,24 @@
-import {Component,ChangeDetectionStrategy,Input,Output,EventEmitter,ViewChild,ElementRef,AfterViewInit,signal} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  signal,
+} from '@angular/core';
 
 @Component({
   selector: 'app-note-editor',
   standalone: true,
   templateUrl: './note-editor.component.html',
   styleUrls: ['./note-editor.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NoteEditorComponent implements AfterViewInit {
-  @Input() contentInput = '';              
+  @Input() contentInput = '';
   @Output() save = new EventEmitter<string>();
 
   @ViewChild('editor', { static: true })
@@ -28,23 +38,25 @@ export class NoteEditorComponent implements AfterViewInit {
 
   isEditorFocused = signal(false);
 
-
   ngAfterViewInit() {
     this.editor.nativeElement.innerHTML = this.contentInput;
-    
+
     // Agregar listeners para el estado del editor
     this.editor.nativeElement.addEventListener('focus', () => {
-      console.log("Editor enfocado");
+      console.log('Editor enfocado');
       this.isEditorFocused.set(true);
     });
-    
-    this.editor.nativeElement.addEventListener('blur', (event) => { 
+
+    this.editor.nativeElement.addEventListener('blur', (event) => {
       // Verificar si el evento de blur fue causado por el clic en insertar imagen
       const relatedTarget = event.relatedTarget as HTMLElement;
-      if (relatedTarget === this.insertImageButton.nativeElement || 
-          relatedTarget === this.insertRowButton.nativeElement || 
-          relatedTarget === this.insertColumnButton.nativeElement)  return;
-      
+      if (
+        relatedTarget === this.insertImageButton.nativeElement ||
+        relatedTarget === this.insertRowButton.nativeElement ||
+        relatedTarget === this.insertColumnButton.nativeElement
+      )
+        return;
+
       this.isEditorFocused.set(false);
     });
   }
@@ -55,7 +67,7 @@ export class NoteEditorComponent implements AfterViewInit {
   }
 
   onInsertImage() {
-    console.log("Insertando imagen");
+    console.log('Insertando imagen');
     // Resetea el input y lo abre
     this.fileInput.nativeElement.value = '';
     this.fileInput.nativeElement.click();
@@ -73,7 +85,6 @@ export class NoteEditorComponent implements AfterViewInit {
       this.insertImageAtCursor(url);
     };
     reader.readAsDataURL(file);
-
   }
 
   private insertImageAtCursor(url: string) {
@@ -127,7 +138,7 @@ export class NoteEditorComponent implements AfterViewInit {
     const container = sel.getRangeAt(0).startContainer as Node;
     return container.nodeType === 1
       ? (container as HTMLElement).closest('table')
-      : (container.parentElement)?.closest('table') || null;
+      : container.parentElement?.closest('table') || null;
   }
 
   private insertNewTable(rows: number, cols: number) {
@@ -136,7 +147,7 @@ export class NoteEditorComponent implements AfterViewInit {
     table.style.tableLayout = 'fixed';
     table.style.borderCollapse = 'collapse';
 
-    const colWidth = (100 / cols) + '%';
+    const colWidth = 100 / cols + '%';
     for (let r = 0; r < rows; r++) {
       const tr = table.insertRow();
       for (let c = 0; c < cols; c++) {
@@ -167,7 +178,7 @@ export class NoteEditorComponent implements AfterViewInit {
     // índice de fila y columnas
     const idx = currentRow.rowIndex;
     const colCount = table.rows[0].cells.length;
-    const colWidth = (100 / colCount) + '%';
+    const colWidth = 100 / colCount + '%';
 
     const newRow = table.insertRow(idx + 1);
     for (let c = 0; c < colCount; c++) {
@@ -187,7 +198,7 @@ export class NoteEditorComponent implements AfterViewInit {
 
     // nuevo conteo y ancho
     const newColCount = table.rows[0].cells.length + 1;
-    const colWidth = (100 / newColCount) + '%';
+    const colWidth = 100 / newColCount + '%';
 
     // para cada fila, inserta celda tras cellIndex
     for (const tr of Array.from(table.rows)) {
@@ -197,15 +208,16 @@ export class NoteEditorComponent implements AfterViewInit {
       newCell.style.padding = '0.5rem';
       newCell.style.width = colWidth;
       // reajustar width de las antiguas
-      Array.from(tr.cells).forEach(td => {
+      Array.from(tr.cells).forEach((td) => {
         td.style.width = colWidth;
       });
     }
 
     // cursor en la nueva celda
-    const newTd = table.rows[
-      (td?.parentElement as HTMLTableRowElement).rowIndex
-    ].cells[cellIndex + 1];
+    const newTd =
+      table.rows[(td?.parentElement as HTMLTableRowElement).rowIndex].cells[
+        cellIndex + 1
+      ];
     this.placeCursorInTableNode(newTd);
   }
 

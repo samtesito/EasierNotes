@@ -1,17 +1,21 @@
 @if (editingMode()) {
 <form (submit)="$event.preventDefault()">
-  <input type="text" 
-         value="{{currentName()}}" 
-         id="inputNoteName" placeholder="Nombre de la Nota"
-         [style.font-size]="viewMode() === 'Detail'? '35px': '25px'"
-         maxlength="50"
-         (keyup)="handleKeyDown($event)" />
+  <input
+    type="text"
+    value="{{ currentName() }}"
+    id="inputNoteName"
+    placeholder="Nombre de la Nota"
+    [style.font-size]="viewMode() === 'Detail' ? '35px' : '25px'"
+    maxlength="50"
+    (keyup)="handleKeyDown($event)"
+  />
 </form>
 }@else{
-  <h1 (click)="enableEdit();" class="main-font"
-      [style.font-size]="viewMode() === 'Detail'? '35px': '25px'">
-    
-    {{ currentName() }}
-  </h1>
+<h1
+  (click)="enableEdit()"
+  class="main-font"
+  [style.font-size]="viewMode() === 'Detail' ? '35px' : '25px'"
+>
+  {{ currentName() }}
+</h1>
 }
-

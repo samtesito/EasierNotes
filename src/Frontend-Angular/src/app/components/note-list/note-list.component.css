@@ -1,9 +1,8 @@
-
 .header-text {
   font-size: 1rem;
 }
 
-.card-note{
+.card-note {
   min-height: 15vh;
 }
 
@@ -12,7 +11,7 @@
 }
 
 .selected-note {
-  border-left: 4px solid #087E8B;
-  background-color: #eafcfd;    
-  box-shadow: 0 6px 20px rgba(8,126,139, .2);
+  border-left: 4px solid #087e8b;
+  background-color: #eafcfd;
+  box-shadow: 0 6px 20px rgba(8, 126, 139, 0.2);
 }
