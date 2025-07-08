@@ -5,3 +5,39 @@ src/backend/bin/Debug/net8.0/backend.dll
 
 src/Backend/obj/Debug/net8.0/backend.AssemblyInfoInputs.cache
 src/Backend/obj/Debug/net8.0/backend.AssemblyInfo.cs
+# Node.js dependencies
+node_modules/
+
+# Angular build output
+dist/
+out-tsc/
+
+# Environment files
+*.env
+src/environments/environment*.ts
+
+# IDE and editor settings
+.vscode/
+.idea/
+*.sublime-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Compiled files
+*.js
+*.js.map
+*.d.ts
+
+# Coverage reports
+coverage/
+
+# Angular cache
+.angular/
