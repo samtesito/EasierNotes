@@ -45,7 +45,7 @@
         [viewMode]="'List'"
         (newName)="changeNoteName($event, note)" >
       </app-note-name>
-      <p class="card-text">{{ displayContentOverview(note.html) }}</p>
+      <p class="card-text">{{ displayContentOverview(note.html, 100) }}</p>
     </div>
   </div>
   }

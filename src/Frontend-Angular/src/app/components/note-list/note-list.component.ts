@@ -4,6 +4,7 @@ import { Note } from '../../models/Note';
 import { Router } from '@angular/router';
 import { ModalService } from '../../helpers/modal.service';
 import { NoteNameComponent } from '../note-name/note-name.component';
+import { displayContentOverview } from '../../helpers/showNoteOverview';
 
 @Component({
   selector: 'app-note-list',
@@ -19,6 +20,9 @@ export class NoteListComponent implements OnInit {
   
   searchTerm = signal<string>('');
 
+  // Funcion para mostrar una vista previa de la nota
+  displayContentOverview = displayContentOverview;
+
   ngOnInit() {
     this.notesService.obtainAll();
   }
@@ -31,14 +35,6 @@ export class NoteListComponent implements OnInit {
 
   selectedNote = signal<Note | null>(null);
   
-
-  displayContentOverview(html: string): string {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const contentOverview = doc.body.textContent || '';
-    
-    return  contentOverview.length > 100 ? contentOverview.substring(0, 100) + '...' : contentOverview
-  };
   
   updateSearchTerm(value: string | null) {
     if (value === null) 

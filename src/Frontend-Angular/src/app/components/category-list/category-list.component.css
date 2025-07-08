@@ -1,0 +1,32 @@
+.card-category {
+    width: 35%;
+    aspect-ratio: 2/1;
+    background-color: #f9f9f9;
+}
+
+.card-category .card-header {
+    background-color: #f7f7f7;
+}
+
+.card-category .card-header:hover {
+    background-color: #f6f6f6;
+}
+
+.card-category:hover {
+    border: 1px solid #087E8B;
+    background-color: #f7f7f7;    
+    box-shadow: 0 6px 20px rgba(8,126,139, .2);
+    scale: 1.005;
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+.notes-container {
+    overflow-y:hidden;
+}
+
+.card-note {
+    min-height: 90px;
+    overflow: hidden;
+
+}

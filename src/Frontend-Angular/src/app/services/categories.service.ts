@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
-export class NotesService {
+export class CategoriesService {
   
   private http = inject(HttpClient);
   private URLbase = "http://localhost:5219/api/categories";
@@ -29,12 +29,6 @@ export class NotesService {
 
     });
   }
-
-  public renameCategory(category: Category){
-    return this.http.put(`${this.URLbase}/update/${category.id}/${category.name}`, {}).subscribe((response) => {
-      this.Categories.set(this.Categories().map(c => c.id === category.id ? category : c));
-  });
-}
 
   public delete(id: number){
     return this.http.delete(`${this.URLbase}/delete/${id}`).subscribe(() => {
