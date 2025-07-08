@@ -15,3 +15,21 @@
   background-color: #eafcfd;
   box-shadow: 0 6px 20px rgba(8, 126, 139, 0.2);
 }
+
+.filter-button {
+  width: 200px;
+  &:hover {
+    background-color: #f7f8f9;
+  }
+}
+
+.list-group-item {
+
+  box-shadow: 0 6px 20px rgba(8, 126, 139, 0.2);
+  user-select: none;
+  z-index: 1000;
+  position: relative;
+  top: 50px;
+  width: 200px;
+  &:hover { background-color: #f7f8f9; }
+}
