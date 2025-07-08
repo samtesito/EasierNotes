@@ -6,8 +6,6 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   templateUrl: './control-panel.component.html',
   styleUrl: './control-panel.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ControlPanelComponent {
-
-}
+export class ControlPanelComponent {}

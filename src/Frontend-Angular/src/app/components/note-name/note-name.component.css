@@ -1,5 +1,6 @@
-input[type=text], select {
-  width:80%;
+input[type='text'],
+select {
+  width: 80%;
   padding-left: 5px;
   margin: 5px;
   border: 1px solid #ccc;
@@ -9,6 +10,7 @@ input[type=text], select {
   font-family: 'Montserrat';
 }
 
-input[type=text]:focus, select:focus {
+input[type='text']:focus,
+select:focus {
   outline: none;
 }
