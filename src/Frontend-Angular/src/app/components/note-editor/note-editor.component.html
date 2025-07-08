@@ -56,6 +56,38 @@
       <img src="statics/save.svg" alt="Guardar" class="toolbar-icon" />
     </button>
 
+    <!-- Botón: Cambiar texto a negritas -->
+    <button
+      type="button"
+      #alternateBoldButton
+      class="btn btn-light btn-sm"
+      [disabled]="!isTextSelected()"
+      (click)="onBold()"
+      title="Cambiar texto a negrita"
+    >
+      <img
+        src="statics/bold.svg"
+        alt="Cambiar texto a negrita"
+        class="toolbar-icon"
+      />
+    </button>
+
+    <!-- Botón: Cambiar texto a itálica -->
+    <button
+      type="button"
+      #alternateItalicButton
+      class="btn btn-light btn-sm"
+      [disabled]="!isTextSelected()"
+      (click)="onItalic()"
+      title="Cambiar texto a itálica"
+    >
+      <img
+        src="statics/italic.svg"
+        alt="Cambiar texto a itálica"
+        class="toolbar-icon"
+      />
+    </button>
+
     <!-- Input oculto para elegir fichero -->
     <input
       type="file"
