@@ -33,7 +33,10 @@
 
 <section class="container m-5 px-3 d-flex flex-row flex-wrap gap-3">
   @for (category of categories(); track category.id) {
-  <div class="card card-category d-flex " (click)="selectCategory(category)">
+  <div class="card card-category d-flex "
+   (click)="selectCategory(category)"
+   [class.category-selected]="selectedCategory()?.id === category.id"
+  >
     <div class="card-header d-flex justify-content-between align-items-center px-3 py-1">
       <h4 class="card-title main-font m-0">{{ category.name }}</h4>
       @if(category.name === 'Otras'){
@@ -43,11 +46,18 @@
       }
     </div>
     <div class="card-body notes-container d-flex flex-column gap-3 h-100">
+      @if(category.notes.length === 0){
+        <div class="d-flex flex-column align-items-center justify-content-center h-100">
+          <img src="statics/no_data.png" alt="Sin notas" class="img-fluid" style="width:50%; height:auto">
+          <p class="text-muted">Sin notas por el momento</p>
+        </div>
+      }@else{
       @for (note of category.notes; track note.id) {
         <div class="card card-note">
           <h6 class="card-title main-font m-0 p-2">{{ note.name }}</h6>
-          <p class="card-text px-2 text-muted">{{ displayContentOverview(note.html, 20) }}</p>
-        </div>
+            <p class="card-text px-2 text-muted">{{ displayContentOverview(note.html, 20) }}</p>
+          </div>
+        }
       }
     </div>
   </div>
@@ -55,29 +65,33 @@
 </section>
 
 <!-- Modal Para Agregar Categoria-->
-<div class="modal fade" id="dateRangeModal" tabindex="-1" aria-labelledby="dateRangeModalLabel" aria-hidden="true">
+<div class="modal fade" id="CreateCategoryModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="CreateCategoryModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="dateRangeModalLabel">Agregar Categoria</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        <h5 class="modal-title" id="CreateCategoryModalLabel">Agregar Categoria</h5>
+        <button type="button" class="btn-close" (click)="closeCreateModal()"></button>
       </div>
       <div class="modal-body">
         <input
+          id="categoryNameInput"
           type="text"
           class="form-control"
           placeholder="Nombre de la categoria"
           (input)="updateCategoryName($event)"
         />
+        @if(!uniqueCategoryName()){
+          <p class="text-danger small">El nombre de la categoria ya existe</p>
+        }
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-secondary" (click)="closeCreateModal()">
           Cancelar
         </button>
         <button
           type="button"
           class="btn btn-primary"
-          [disabled]="!categoryNameValid()"
+          [disabled]="!categoryNameValid() || !uniqueCategoryName()"
           (click)="createCategory()"
         >
           <i class="bi bi-check-lg me-2" aria-hidden="true"></i>
@@ -95,13 +109,13 @@
   data-bs-backdrop="static"
   data-bs-keyboard="false"
   tabindex="-1"
-  aria-labelledby="confirmDeleteModalLabel"
+  aria-labelledby="DeleteCategoryModalLabel"
   aria-hidden="true"
 >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header bg-danger text-white py-1">
-        <h4 class="modal-title" id="confirmDeleteModalLabel">
+        <h4 class="modal-title" id="DeleteCategoryModalLabel">
           <i class="bi bi-exclamation-triangle-fill me-2 fs-3"></i>
           Confirmación de eliminación
         </h4>
@@ -117,7 +131,7 @@
         ¿Estás seguro de que deseas eliminar la categoria
         <strong>{{ selectedCategory()?.name }}</strong
         >?
-        <p class="text-muted">Tambien se eliminarán las notas asociadas a esta categoria</p>
+        <p class="text-muted mt-3">Tambien se eliminarán las notas asociadas a esta categoria</p>
       </div>
 
       <div class="modal-footer">

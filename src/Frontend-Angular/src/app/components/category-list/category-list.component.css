@@ -2,6 +2,7 @@
     width: 35%;
     aspect-ratio: 2/1;
     background-color: #f9f9f9;
+    transition: all 0.3s ease;
 }
 
 .card-category .card-header {
@@ -13,12 +14,17 @@
 }
 
 .card-category:hover {
-    border: 1px solid #087E8B;
+
     background-color: #f7f7f7;    
-    box-shadow: 0 6px 20px rgba(8,126,139, .2);
     scale: 1.005;
     transform: translateY(-5px);
     transition: all 0.3s ease;
+}
+
+
+.category-selected {
+    border: 1px solid #087E8B;
+    box-shadow: 0 6px 20px rgba(8,126,139, .2);
 }
 
 .notes-container {

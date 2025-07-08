@@ -39,6 +39,12 @@ export class CategoryListComponent implements OnInit {
   displayContentOverview = displayContentOverview;
 
   selectCategory(category: Category) {
+    // Si la categoria ya esta seleccionada, se deselecciona
+    if(this.selectedCategory() === category) {
+      this.selectedCategory.set(null);
+      return;
+    }
+    // Si la categoria no esta seleccionada, se selecciona
     this.selectedCategory.set(category);
   }
 
@@ -54,16 +60,19 @@ export class CategoryListComponent implements OnInit {
 
 
   categoryNameValid = computed(() => {
-    return this.categoryName().length > 0 && this.categoryName().length < 20;
+    return this.categoryName().length > 5 && this.categoryName().length < 20;
   })
 
   uniqueCategoryName = computed(() => {
-    return !this.categories().some(category => category.name === this.categoryName());
+    return !this.categoriesService.Categories().some(category => category.name.trim().toLowerCase() === this.categoryName().trim().toLowerCase());
   })
+
 
   updateSearchTerm(value: string | null) {
     this.searchTerm.set(value || '');
   }
+
+
   
   openDeleteModal(){
     if( this.selectedCategory() === null) 
@@ -71,10 +80,28 @@ export class CategoryListComponent implements OnInit {
     this.modalService.open('DeleteCategoryModal');
   }
 
+  openCreateModal(){
+    this.modalService.open('CreateCategoryModal');
+  }
+
+  closeCreateModal(){
+    const input = document.getElementById('categoryNameInput') as HTMLInputElement;
+    input.value = '';
+    this.categoryName.set('');
+    this.modalService.close('CreateCategoryModal');
+  }
+
   deleteCategory(){
     if( this.selectedCategory() === null) 
       return;
     this.categoriesService.delete(this.selectedCategory()?.id!);
+  }
+
+  createCategory(){
+    if( this.categoryNameValid() && this.uniqueCategoryName()){
+      this.categoriesService.create(this.categoryName());
+      this.closeCreateModal();
+    }
   }
 
 
