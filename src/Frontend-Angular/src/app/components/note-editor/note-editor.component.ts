@@ -36,6 +36,12 @@ export class NoteEditorComponent implements AfterViewInit {
   @ViewChild('insertColumnButton', { static: true })
   private insertColumnButton!: ElementRef<HTMLButtonElement>;
 
+  @ViewChild('alternateBoldButton', { static: true })
+  private alternateBoldButton!: ElementRef<HTMLButtonElement>;
+
+  @ViewChild('alternateItalicButton', { static: true })
+  private alternateItalicButton!: ElementRef<HTMLButtonElement>;
+
   isEditorFocused = signal(false);
   isTextSelected = signal(false);
 
@@ -48,13 +54,13 @@ export class NoteEditorComponent implements AfterViewInit {
       this.isEditorFocused.set(true);
     });
 
-    //// AQUÍ ESTOY TRABAJANDO
-    /*  this.editor.addEventListener('selectionchange', () => {
+    document.addEventListener('selectionchange', () => {
       const selection = document.getSelection();
       if (selection && selection.toString().trim()) {
-        console.log('Selected text:', selection.toString());
-      }
-    });*/
+        console.log('Texto seleccionado:', selection.toString());
+        this.isTextSelected.set(true);
+      } else this.isTextSelected.set(false);
+    });
 
     this.editor.nativeElement.addEventListener('blur', (event) => {
       // Verificar si el evento de blur fue causado por el clic en insertar imagen
@@ -62,11 +68,14 @@ export class NoteEditorComponent implements AfterViewInit {
       if (
         relatedTarget === this.insertImageButton.nativeElement ||
         relatedTarget === this.insertRowButton.nativeElement ||
-        relatedTarget === this.insertColumnButton.nativeElement
+        relatedTarget === this.insertColumnButton.nativeElement ||
+        relatedTarget === this.alternateBoldButton.nativeElement ||
+        relatedTarget === this.alternateItalicButton.nativeElement
       )
         return;
 
       this.isEditorFocused.set(false);
+      this.isTextSelected.set(false);
     });
   }
 
@@ -237,5 +246,67 @@ export class NoteEditorComponent implements AfterViewInit {
     range.collapse(true);
     sel.removeAllRanges();
     sel.addRange(range);
+  }
+
+  onItalic() {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+
+    if (!selectedText) return;
+
+    // Revisa si el texto seleccionado ya está en itálica
+    const ancestor = range.commonAncestorContainer;
+    const isItalic = ancestor.parentElement?.closest('em');
+
+    if (isItalic) {
+      // Quita las itálicas: quita los <em> que envuelven el texto
+      const italicNode = isItalic;
+      const parent = italicNode.parentNode;
+      while (italicNode.firstChild) {
+        parent?.insertBefore(italicNode.firstChild, italicNode);
+      }
+      parent?.removeChild(italicNode);
+    } else {
+      // Aplica las itálicas: envuelve el texto en <em>
+      const em = document.createElement('em');
+      em.textContent = selectedText;
+
+      range.deleteContents();
+      range.insertNode(em);
+    }
+  }
+
+  onBold() {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+
+    const range = selection.getRangeAt(0);
+    const selectedText = range.toString();
+
+    if (!selectedText) return;
+
+    // Revisa si el texto ya está en negritas
+    const ancestor = range.commonAncestorContainer;
+    const isBold = ancestor.parentElement?.closest('strong');
+
+    if (isBold) {
+      // Quita las negritas: remueve los <strong> que envuelven al texto
+      const boldNode = isBold;
+      const parent = boldNode.parentNode;
+      while (boldNode.firstChild) {
+        parent?.insertBefore(boldNode.firstChild, boldNode);
+      }
+      parent?.removeChild(boldNode);
+    } else {
+      // Aplica las negritas: envuelve el texto en <strong>
+      const strong = document.createElement('strong');
+      strong.textContent = selectedText;
+
+      range.deleteContents();
+      range.insertNode(strong);
+    }
   }
 }
