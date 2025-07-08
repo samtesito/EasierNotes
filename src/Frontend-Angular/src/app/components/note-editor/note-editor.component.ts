@@ -37,6 +37,7 @@ export class NoteEditorComponent implements AfterViewInit {
   private insertColumnButton!: ElementRef<HTMLButtonElement>;
 
   isEditorFocused = signal(false);
+  isTextSelected = signal(false);
 
   ngAfterViewInit() {
     this.editor.nativeElement.innerHTML = this.contentInput;
@@ -46,6 +47,14 @@ export class NoteEditorComponent implements AfterViewInit {
       console.log('Editor enfocado');
       this.isEditorFocused.set(true);
     });
+
+    //// AQUÍ ESTOY TRABAJANDO
+    /*  this.editor.addEventListener('selectionchange', () => {
+      const selection = document.getSelection();
+      if (selection && selection.toString().trim()) {
+        console.log('Selected text:', selection.toString());
+      }
+    });*/
 
     this.editor.nativeElement.addEventListener('blur', (event) => {
       // Verificar si el evento de blur fue causado por el clic en insertar imagen
