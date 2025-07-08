@@ -42,6 +42,10 @@ export class NotesService {
       this.Notes.set(this.Notes().filter(n => n.id !== id));
   });}
 
+  public getNoteById(id: number): Observable<Note> {
+    return this.http.get<Note>(`${this.URLbase}/${id}`);
+  }
+
   
 }
 

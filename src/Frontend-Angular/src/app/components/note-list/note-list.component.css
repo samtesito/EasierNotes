@@ -18,6 +18,7 @@
 
 .filter-button {
   width: 200px;
+  z-index: 5;
   &:hover {
     background-color: #f7f8f9;
   }
@@ -27,9 +28,13 @@
 
   box-shadow: 0 6px 20px rgba(8, 126, 139, 0.2);
   user-select: none;
-  z-index: 1000;
+  z-index: 4;
   position: relative;
   top: 50px;
   width: 200px;
   &:hover { background-color: #f7f8f9; }
+}
+
+input[type="checkbox"] {
+  accent-color: #087e8b !important;
 }

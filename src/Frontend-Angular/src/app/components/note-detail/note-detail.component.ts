@@ -4,6 +4,7 @@ import { NotesService } from '../../services/notes.service';
 import { Note } from '../../models/Note';
 import { NoteNameComponent } from '../note-name/note-name.component';
 import { NoteEditorComponent } from '../note-editor/note-editor.component';
+import { CategoriesService } from '../../services/categories.service';
 
 @Component({
   selector: 'app-note-detail',
@@ -22,8 +23,7 @@ export class NoteDetailComponent {
   constructor() {
     const idParam = this.route.snapshot.paramMap.get('id');
     const noteId = idParam ? +idParam : NaN;
-    const allNotes = this.noteService.Notes();
-    this.note = allNotes.find((n) => n.id === noteId) || allNotes[0];
+    this.noteService.getNoteById(noteId).subscribe(note => this.note = note);
   }
 
   changeNoteName(newName: string) {

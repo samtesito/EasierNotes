@@ -66,8 +66,8 @@ export class NoteListComponent implements OnInit {
     if(!category) return;
 
     // Si la categoria ya esta seleccionada, se desmarca
-    if(this.categoriesSelected().some(category => category.id === category.id)){
-      this.categoriesSelected.set(this.categoriesSelected().filter(category => category.id !== category.id));
+    if(this.categoriesSelected().some(categ => categ.id === category.id)){
+      this.categoriesSelected.set(this.categoriesSelected().filter(categ => categ.id !== category.id));
     }
     // Si la categoria no esta seleccionada, se marca
     else{
