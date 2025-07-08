@@ -1,11 +1,13 @@
 <section class="container-fluid my-4 mx-5">
-<app-note-name
-     [currentName]="note.name"
-      [viewMode]="'Detail'"
-      (newName)="changeNoteName($event)" >
-</app-note-name>
+  <app-note-name
+    [currentName]="note.name"
+    [viewMode]="'Detail'"
+    (newName)="changeNoteName($event)"
+  >
+  </app-note-name>
 
-<app-note-editor
-  [contentInput]="note.html"
-  (save)="onSaveHtml($event)"
-></app-note-editor> 
+  <app-note-editor
+    [contentInput]="note.html"
+    (save)="onSaveHtml($event)"
+  ></app-note-editor>
+</section>
