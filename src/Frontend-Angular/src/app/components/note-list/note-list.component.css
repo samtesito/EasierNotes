@@ -1,0 +1,18 @@
+
+.header-text {
+  font-size: 1rem;
+}
+
+.card-note{
+  min-height: 15vh;
+}
+
+.card-note:hover {
+  background-color: #f7f8f9;
+}
+
+.selected-note {
+  border-left: 4px solid #087E8B;
+  background-color: #eafcfd;    
+  box-shadow: 0 6px 20px rgba(8,126,139, .2);
+}
