@@ -23,27 +23,25 @@ export class NotesService {
        });
   }
 
-  public create(note: Note) {
-    this.http.post<Note>(this.URLbase, note).subscribe((response) => {
+  public create() {
+    this.http.post<Note>(`${this.URLbase}/create`, {}).subscribe((response) => {
       const currentNotes = this.Notes();
-      response.name = `Nota Nueva (${response.id})`
       this.Notes.set([...currentNotes, response]);
-      this.update(response.id!, response);
       this.router.navigate(['/note', response.id]);
-
     });
   }
 
-  public update(id: number, note:Note){
-    return this.http.put(`${this.URLbase}/${id}`, note).subscribe((response) => {
-      this.Notes.set(this.Notes().map(n => n.id === id ? note : n));
+  public update(note:Note){
+    return this.http.put(`${this.URLbase}/update`, note).subscribe((response) => {
+      this.Notes.set(this.Notes().map(n => n.id === note.id ? note : n));
   });
 }
 
   public delete(id: number){
-    return this.http.delete(`${this.URLbase}/${id}`).subscribe(() => {
+    return this.http.delete(`${this.URLbase}/delete/${id}`).subscribe(() => {
       this.Notes.set(this.Notes().filter(n => n.id !== id));
   });}
 
   
 }
+

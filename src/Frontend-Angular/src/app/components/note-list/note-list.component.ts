@@ -88,21 +88,14 @@ deleteNote() {
 
 
 createNote(){
-
-  let newNote: Note ={
-    name: `Nota nueva`,
-    html: '<p> Comienza a plasmar tus ideas aquí...</p>',
-    categoryId: 1,
-  }
-  this.notesService.create(newNote)
-
+  this.notesService.create()
 }
 
 changeNoteName(newName: string, note: Note) {
   if (newName && newName.trim() !== '') {
     note.name = newName;
     console.log("cambiando nombre de nota", note);
-    this.notesService.update(note.id!, note);
+    this.notesService.update(note);
   }
 }
 
