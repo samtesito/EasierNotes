@@ -4,7 +4,7 @@ export const routes: Routes = [
 
     {
         path: '',   
-        redirectTo: 'notes',
+        redirectTo: 'categories',
         pathMatch: 'full'
     },
     {
@@ -23,6 +23,6 @@ export const routes: Routes = [
     //Fallback 
     {
         path:'**',
-        redirectTo: 'notes',
+        redirectTo: 'categories',
     }
 ];

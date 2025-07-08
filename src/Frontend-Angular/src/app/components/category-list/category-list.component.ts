@@ -99,7 +99,7 @@ export class CategoryListComponent implements OnInit {
 
   createCategory(){
     if( this.categoryNameValid() && this.uniqueCategoryName()){
-      this.categoriesService.create(this.categoryName());
+      this.categoriesService.create(this.categoryName().trim());
       this.closeCreateModal();
     }
   }

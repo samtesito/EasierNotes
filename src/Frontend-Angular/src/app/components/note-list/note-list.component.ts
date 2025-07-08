@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 import { ModalService } from '../../helpers/modal.service';
 import { NoteNameComponent } from '../note-name/note-name.component';
 import { displayContentOverview } from '../../helpers/showNoteOverview';
+import { CategoriesService } from '../../services/categories.service';
+import { Category } from '../../models/Category';
 
 @Component({
   selector: 'app-note-list',
@@ -22,6 +24,7 @@ import { displayContentOverview } from '../../helpers/showNoteOverview';
 })
 export class NoteListComponent implements OnInit {
   notesService = inject(NotesService);
+  categoriesService = inject(CategoriesService);
   modalService = inject(ModalService);
   router = inject(Router);
 
@@ -31,16 +34,60 @@ export class NoteListComponent implements OnInit {
   displayContentOverview = displayContentOverview;
 
   ngOnInit() {
-    this.notesService.obtainAll();
+    // Si no se ha cargado el listado de categorias con notas, se obtienen
+    if(this.categoriesService.Categories().length === 0){
+      this.categoriesService.obtainAll();
+    }
   }
 
-  notes = computed(() =>
-    this.notesService.Notes().filter((note) => {
-      if (this.searchTerm().length === 0) return true;
-      return note.name.toLowerCase().includes(this.searchTerm().toLowerCase());
-    }),
-  );
+  notes = computed(() =>{
+    const notes = this.categoriesService.Categories().flatMap(category => category.notes);
 
+    // Se filtran las notas por las categorias seleccionadas
+    const notesFilteredByCategory = this.categoriesSelected().length > 0 ? notes.filter(note => 
+        this.categoriesSelected().some(category => category.id === note.categoryId)) : notes;
+
+    //Luego, se filtran por el termino de busqueda
+    if(this.searchTerm().length === 0) return notesFilteredByCategory;
+    else return notesFilteredByCategory.filter(note =>
+       note.name.toLowerCase().trim().includes(this.searchTerm().toLowerCase().trim()));
+  });
+
+  // Se obtiene el nombre de las categorias para mostrar en el panel de filtro
+  categoriesNames = computed(() => {
+    return this.categoriesService.Categories().map(category => category.name);
+  });
+
+
+  categoriesSelected = signal<Category[]>([]);
+
+  toggleCategoryCheckbox(name: string) {
+    const category = this.categoriesService.Categories().find(category => category.name === name);
+    if(!category) return;
+
+    // Si la categoria ya esta seleccionada, se desmarca
+    if(this.categoriesSelected().some(category => category.id === category.id)){
+      this.categoriesSelected.set(this.categoriesSelected().filter(category => category.id !== category.id));
+    }
+    // Si la categoria no esta seleccionada, se marca
+    else{
+      this.categoriesSelected.set([...this.categoriesSelected(), category]);
+    }
+  }
+
+  categorySelectorOpen = signal<boolean>(false);
+  toggleCategorySelectorOpen() {
+    this.categorySelectorOpen.set(!this.categorySelectorOpen());
+    console.log('toggleCategorySelectorOpen', this.categorySelectorOpen());
+  }
+
+  filterButtonText = computed(() => {
+    if(this.categoriesSelected().length === 0)
+       return 'Todas';
+    else
+      return this.categoriesSelected().map(category => category.name).join(', ');
+  });
+  
   selectedNote = signal<Note | null>(null);
   
   
