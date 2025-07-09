@@ -253,26 +253,25 @@ export class NoteEditorComponent implements AfterViewInit {
     if (!selection || selection.rangeCount === 0) return;
 
     const range = selection.getRangeAt(0);
-    const selectedText = range.toString();
+    if (range.collapsed) return;
 
-    if (!selectedText) return;
+    // Revisa si la selección entera está envuelta en <em>
+    const commonAncestor = range.commonAncestorContainer;
+    const container =
+      commonAncestor.nodeType === Node.ELEMENT_NODE
+        ? (commonAncestor as HTMLElement)
+        : commonAncestor.parentElement;
 
-    // Revisa si el texto seleccionado ya está en itálica
-    const ancestor = range.commonAncestorContainer;
-    const isItalic = ancestor.parentElement?.closest('em');
+    const emWrapper = this.findWrappingEm(container, range);
 
-    if (isItalic) {
-      // Quita las itálicas: quita los <em> que envuelven el texto
-      const italicNode = isItalic;
-      const parent = italicNode.parentNode;
-      while (italicNode.firstChild) {
-        parent?.insertBefore(italicNode.firstChild, italicNode);
-      }
-      parent?.removeChild(italicNode);
+    if (emWrapper) {
+      // Quita los tags <em> que envuelven al elemento
+      this.unwrapElement(emWrapper);
     } else {
-      // Aplica las itálicas: envuelve el texto en <em>
+      // Envuelve el texto en <em>
+      const fragment = range.cloneContents();
       const em = document.createElement('em');
-      em.textContent = selectedText;
+      em.appendChild(fragment);
 
       range.deleteContents();
       range.insertNode(em);
@@ -284,29 +283,102 @@ export class NoteEditorComponent implements AfterViewInit {
     if (!selection || selection.rangeCount === 0) return;
 
     const range = selection.getRangeAt(0);
-    const selectedText = range.toString();
+    if (range.collapsed) return;
 
-    if (!selectedText) return;
+    // Revisa si la selección entera está envuelta en <strong>
+    const commonAncestor = range.commonAncestorContainer;
+    const container =
+      commonAncestor.nodeType === Node.ELEMENT_NODE
+        ? (commonAncestor as HTMLElement)
+        : commonAncestor.parentElement;
 
-    // Revisa si el texto ya está en negritas
-    const ancestor = range.commonAncestorContainer;
-    const isBold = ancestor.parentElement?.closest('strong');
+    const strongWrapper = this.findWrappingStrong(container, range);
 
-    if (isBold) {
-      // Quita las negritas: remueve los <strong> que envuelven al texto
-      const boldNode = isBold;
-      const parent = boldNode.parentNode;
-      while (boldNode.firstChild) {
-        parent?.insertBefore(boldNode.firstChild, boldNode);
-      }
-      parent?.removeChild(boldNode);
+    if (strongWrapper) {
+      // Quita los tags <strong> que envuelven al elemento
+      this.unwrapElement(strongWrapper);
     } else {
-      // Aplica las negritas: envuelve el texto en <strong>
+      // Envuelve el texto en <strong>
+      const fragment = range.cloneContents();
       const strong = document.createElement('strong');
-      strong.textContent = selectedText;
+      strong.appendChild(fragment);
 
       range.deleteContents();
       range.insertNode(strong);
+
+      // Move cursor after the inserted node
+      /*
+      selection.removeAllRanges();
+      const newRange = document.createRange();
+      newRange.setStartAfter(strong);
+      newRange.collapse(true);
+      selection.addRange(newRange);*/
     }
+  }
+
+  private findWrappingStrong(
+    container: HTMLElement | null,
+    range: Range,
+  ): HTMLElement | null {
+    if (!container) return null;
+
+    // Traverse up from the start and end containers to see if they share a <strong> ancestor
+    const startAncestor =
+      range.startContainer.nodeType === Node.ELEMENT_NODE
+        ? (range.startContainer as HTMLElement)
+        : range.startContainer.parentElement ?? null;
+
+    const endAncestor =
+      range.endContainer.nodeType === Node.ELEMENT_NODE
+        ? (range.endContainer as HTMLElement)
+        : range.endContainer.parentElement ?? null;
+
+    const startStrong = startAncestor?.closest(
+      'strong, b',
+    ) as HTMLElement | null;
+    const endStrong = endAncestor?.closest('strong, b') as HTMLElement | null;
+
+    if (startStrong && startStrong === endStrong) {
+      return startStrong;
+    }
+
+    return null;
+  }
+
+  private findWrappingEm(
+    container: HTMLElement | null,
+    range: Range,
+  ): HTMLElement | null {
+    if (!container) return null;
+
+    // Traverse up from the start and end containers to see if they share a <em> ancestor
+    const startAncestor =
+      range.startContainer.nodeType === Node.ELEMENT_NODE
+        ? (range.startContainer as HTMLElement)
+        : range.startContainer.parentElement ?? null;
+
+    const endAncestor =
+      range.endContainer.nodeType === Node.ELEMENT_NODE
+        ? (range.endContainer as HTMLElement)
+        : range.endContainer.parentElement ?? null;
+
+    const startEm = startAncestor?.closest('em, b') as HTMLElement | null;
+    const endEm = endAncestor?.closest('em, b') as HTMLElement | null;
+
+    if (startEm && startEm === endEm) {
+      return startEm;
+    }
+
+    return null;
+  }
+
+  private unwrapElement(element: HTMLElement) {
+    const parent = element.parentNode;
+    if (!parent) return;
+
+    while (element.firstChild) {
+      parent.insertBefore(element.firstChild, element);
+    }
+    parent.removeChild(element);
   }
 }
