@@ -39,8 +39,8 @@ export class CategoryListComponent implements OnInit {
   displayContentOverview = displayContentOverview;
 
   selectCategory(category: Category) {
-    // Si la categoria ya esta seleccionada, se deselecciona
-    if(this.selectedCategory() === category) {
+    // Si la categoria ya esta seleccionada o se intenta seleccionar "otras", se deselecciona
+    if(this.selectedCategory() === category || category.name === 'Otras') {
       this.selectedCategory.set(null);
       return;
     }

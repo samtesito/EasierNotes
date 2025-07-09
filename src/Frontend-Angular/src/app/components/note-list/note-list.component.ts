@@ -6,6 +6,7 @@ import {
   OnInit,
   AfterViewInit,
   signal,
+  HostListener,
 } from '@angular/core';
 import { NotesService } from '../../services/notes.service';
 import { Note } from '../../models/Note';
@@ -48,6 +49,14 @@ export class NoteListComponent implements OnInit {
 
     //Se reestablece la categoria seleccionada
     this.categoriesService.CategoryOpened.set(null);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event) {
+    const target = event.target as HTMLElement;
+    if(!target.closest('.category-selector') && !target.closest('.filter-button')){
+      this.categorySelectorOpen.set(false);
+    }
   }
 
   notes = computed(() =>{
