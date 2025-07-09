@@ -1,45 +1,64 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Note } from '../models/Note';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { CategoriesService } from './categories.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotesService {
-  
+
+  categoriesService = inject(CategoriesService);
   private http = inject(HttpClient);
+
   private URLbase = "http://localhost:5219/api/notes";
   private router = inject(Router);
 
-  Notes = signal<Note[]>([]);
 
-  public obtainAll(): void {
-    this.http.get<Note[]>(this.URLbase).subscribe((response) => 
-      { 
-        this.Notes.set(response);
-        console.log("Notas obtenidas:", this.Notes());
-       });
-  }
 
   public create() {
     this.http.post<Note>(`${this.URLbase}/create`, {}).subscribe((response) => {
-      const currentNotes = this.Notes();
-      this.Notes.set([...currentNotes, response]);
+      const currentNotes = this.categoriesService.Categories();
+      this.categoriesService.Categories.set(currentNotes.map(category =>{
+        if(category.id === response.categoryId){
+          return {
+            ...category,
+            notes: [...category.notes, response]
+          }
+        }
+        return category;
+      }));
       this.router.navigate(['/note', response.id]);
     });
   }
 
   public update(note:Note){
-    return this.http.put(`${this.URLbase}/update`, note).subscribe((response) => {
-      this.Notes.set(this.Notes().map(n => n.id === note.id ? note : n));
+    return this.http.put(`${this.URLbase}/update`, note).subscribe(() => {
+      this.categoriesService.Categories.set(this.categoriesService.Categories().map(category =>{
+        if(category.id === note.categoryId){
+          return {
+            ...category,
+            notes: category.notes.map(n => n.id === note.id ? note : n)
+          }
+        }
+        return category;
+      }));
   });
 }
 
-  public delete(id: number){
-    return this.http.delete(`${this.URLbase}/delete/${id}`).subscribe(() => {
-      this.Notes.set(this.Notes().filter(n => n.id !== id));
+  public delete(note: Note){
+    return this.http.delete(`${this.URLbase}/delete/${note.id}`).subscribe(() => {
+      this.categoriesService.Categories.set(this.categoriesService.Categories().map(category =>{
+        if(category.id === note.categoryId){
+          return {
+            ...category,
+            notes: category.notes.filter(n => n.id !== note.id)
+          }
+        }
+        return category;
+      }));
   });}
 
   public getNoteById(id: number): Observable<Note> {

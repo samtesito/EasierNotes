@@ -4,6 +4,7 @@ import {
   computed,
   inject,
   OnInit,
+  AfterViewInit,
   signal,
 } from '@angular/core';
 import { NotesService } from '../../services/notes.service';
@@ -38,6 +39,15 @@ export class NoteListComponent implements OnInit {
     if(this.categoriesService.Categories().length === 0){
       this.categoriesService.obtainAll();
     }
+
+    // Si se ha seleccionado una categoria, se obtienen las notas de la categoria
+    const categoryOpened = this.categoriesService.CategoryOpened();
+    if(categoryOpened){
+      this.categoriesSelected.set([categoryOpened]);
+    }
+
+    //Se reestablece la categoria seleccionada
+    this.categoriesService.CategoryOpened.set(null);
   }
 
   notes = computed(() =>{
@@ -62,6 +72,7 @@ export class NoteListComponent implements OnInit {
   categoriesSelected = signal<Category[]>([]);
 
   toggleCategoryCheckbox(name: string) {
+
     const category = this.categoriesService.Categories().find(category => category.name === name);
     if(!category) return;
 
@@ -75,8 +86,19 @@ export class NoteListComponent implements OnInit {
     }
   }
 
+  // Se controla si el selector de categorias esta abierto
   categorySelectorOpen = signal<boolean>(false);
   toggleCategorySelectorOpen() {
+
+    //Marcamos todas las categorias que esten en categoriesSelected
+    if(!this.categorySelectorOpen()){
+    this.categoriesSelected().forEach(category => {
+      const input = document.getElementById(`check-category-${category.name}`) as HTMLInputElement;
+      if(input) input.checked = true;
+    });
+  }
+
+    //Se controla si el selector de categorias esta abierto
     this.categorySelectorOpen.set(!this.categorySelectorOpen());
     console.log('toggleCategorySelectorOpen', this.categorySelectorOpen());
   }
@@ -130,7 +152,7 @@ export class NoteListComponent implements OnInit {
 
   deleteNote() {
     if (this.selectedNote() !== null) {
-      this.notesService.delete(this.selectedNote()?.id!);
+      this.notesService.delete(this.selectedNote()!);
       this.unselectNote();
     }
   }

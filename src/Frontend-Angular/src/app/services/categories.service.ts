@@ -12,6 +12,8 @@ export class CategoriesService {
   private URLbase = "http://localhost:5219/api/categories";
   private router = inject(Router);
 
+  CategoryOpened = signal<Category | null>(null);
+
   Categories = signal<Category[]>([]);
 
   public obtainAll(): void {

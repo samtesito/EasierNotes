@@ -104,5 +104,10 @@ export class CategoryListComponent implements OnInit {
     }
   }
 
+  openCategory(category: Category){
+    this.categoriesService.CategoryOpened.set(category);
+    this.router.navigate(['/notes']);
+  }
+
 
 }
