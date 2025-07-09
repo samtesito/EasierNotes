@@ -30,6 +30,21 @@
       />
     </button>
 
+    <!-- Botón: Eliminar tabla -->
+    <button
+      type="button"
+      #deleteTableButton
+      class="btn btn-light btn-sm me-2"
+      [disabled]="!isEditorFocused()"
+      title="Eliminar tabla"
+    >
+      <img
+        src="statics/remove_table.svg"
+        alt="Eliminar tabla"
+        class="toolbar-icon"
+      />
+    </button>
+
     <!-- Botón: Insertar imagen -->
     <button
       type="button"
@@ -40,11 +55,26 @@
       title="Insertar imagen"
     >
       <img
-        src="statics/picture.svg"
+        src="statics/add_image.svg"
         alt="Insertar imagen"
         class="toolbar-icon"
       />
     </button>
+
+        <!-- Botón: Eliminar imagen -->
+        <button
+        type="button"
+        #deleteImageButton
+        class="btn btn-light btn-sm me-2"
+        [disabled]="!isEditorFocused()"
+        title="Eliminar imagen"
+      >
+        <img
+          src="statics/remove_image.svg"
+          alt="Eliminar imagen"
+          class="toolbar-icon"
+        />
+      </button>
 
     <!-- Botón: Guardar -->
     <button
