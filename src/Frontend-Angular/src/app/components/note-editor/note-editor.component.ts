@@ -294,6 +294,9 @@ export class NoteEditorComponent implements AfterViewInit {
   }
 
   onItalic() {
+    this.sarambambiche('em');
+    /// LEGACY VERSION
+    /*
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
 
@@ -320,17 +323,18 @@ export class NoteEditorComponent implements AfterViewInit {
 
       range.deleteContents();
       range.insertNode(em);
-    }
+    }*/
   }
 
   onBold() {
+    this.sarambambiche('strong');
     /// LEGACY VERSION
-
+    /*
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
 
     const range = selection.getRangeAt(0);
-    if (range.collapsed) return;
+    //if (range.collapsed) return;
 
     // Revisa si la selección entera está envuelta en <strong>
     const commonAncestor = range.commonAncestorContainer;
@@ -369,11 +373,30 @@ export class NoteEditorComponent implements AfterViewInit {
       newRange.setStartAfter(strong);
       newRange.collapse(true);
       selection.addRange(newRange);
+    }*/
+  }
+
+  private isSelectionWrappedBy(tagName: string): boolean {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return false;
+
+    let node = selection.anchorNode;
+    if (node?.nodeType === Node.TEXT_NODE) {
+      node = node.parentNode;
     }
+
+    while (node && node.nodeType === Node.ELEMENT_NODE) {
+      if ((node as HTMLElement).tagName === tagName.toUpperCase()) {
+        return true;
+      }
+      node = node.parentNode;
+    }
+
+    return false;
   }
 
   /////LEGACY VERSION
-
+  /*
   private findWrappingStrong(
     container: HTMLElement | null,
     range: Range,
@@ -438,7 +461,7 @@ export class NoteEditorComponent implements AfterViewInit {
       parent.insertBefore(element.firstChild, element);
     }
     parent.removeChild(element);
-  }
+  }*/
 
   onDeleteImage() {
     this.selectedImage()!.remove();
@@ -448,5 +471,114 @@ export class NoteEditorComponent implements AfterViewInit {
   onDeleteTable() {
     this.selectedTable()!.remove();
     this.selectedTable.set(null);
+  }
+
+  /// NUEVO TRY: RECURSIVIDAD
+  ///vainas a tener en cuenta:
+  //   - La recurisvidad tendrá que ser hacia arriba también, limitada por el div
+  //   - Tres casos:
+  //      1) Hay una etiqueta externa, por lo que no hay etiquetas internas. Se elimina la etiqueta externa.
+  //      2) No hay etiqueta externa, que a su vez tiene dos casos:
+  //            2.1) Hay etiquetas internas, así que se eliminan y luego se envuelve la selección en la etiqueta
+  //            2.2) No hay etiquetas externas ni internas, se envuelve toda la selección en la etiqueta
+
+  // LA función
+  private sarambambiche(tagName: string) {
+    // Se obtiene la selección y se verifica que exista
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+
+    // Se obtiene el rango y se verifica que no sea un caret
+    const range = selection.getRangeAt(0);
+    if (range.collapsed) return;
+
+    // Se verifica si hay una etiqueta externa
+    const ancestor = range.commonAncestorContainer;
+    const outerTag = this.isThereAnOuterTag(ancestor, tagName);
+
+    if (outerTag) this.removeWrapping(outerTag as HTMLElement);
+    else {
+      const htmlParent = this.findClosestHTMLParent(ancestor);
+      this.untagInnerElements(htmlParent, tagName);
+      this.addWrapping(range, tagName, selection);
+    }
+  }
+
+  // Envuelve la selección en una etiqueta
+  private addWrapping(range: Range, tagName: string, selection: Selection) {
+    // Clona la selección de texto
+    const fragment = range.cloneContents();
+    const wrapped = document.createElement(tagName);
+    // Guarda el rango
+    const newRange = document.createRange();
+    newRange.selectNodeContents(wrapped);
+    // Envuelve el texto en el tag
+    wrapped.appendChild(fragment);
+    // Reemplaza el texto editado
+    range.deleteContents();
+    range.insertNode(wrapped);
+    // Reselecciona el nuevo contenido envuelto en el <strong> tag
+    selection.removeAllRanges();
+    selection.addRange(newRange);
+    // Move cursor after the inserted node
+    /*
+    selection.removeAllRanges();
+    //const newRange = document.createRange();
+    newRange.setStartAfter(strong);
+    newRange.collapse(true);
+    selection.addRange(newRange);*/
+  }
+
+  // Clona los elementos hijos, elimina el padre y añade los clones a la posición del padre
+  private removeWrapping(el: HTMLElement) {
+    const parent = el.parentNode as HTMLElement;
+
+    while (el.firstChild) {
+      parent.insertBefore(el.firstChild, el);
+    }
+    parent.removeChild(el);
+  }
+
+  // Busca <strong> tags dentro de los elementos hijos con recurisvidad. Si los consigue, los manda a quitar con removeWrapping()
+  private untagInnerElements(el: HTMLElement, tagName: string) {
+    if (!el) return;
+    const listOfTags = Array.from(el.children).filter(
+      (child) => child.tagName === tagName.toUpperCase(),
+    );
+    for (const tag of listOfTags) {
+      this.removeWrapping(tag as HTMLElement);
+    }
+    const childs = el.children;
+    for (const child of childs)
+      this.untagInnerElements(child as HTMLElement, tagName);
+  }
+
+  // Revisa hacia arriba con recursividad
+  private isThereAnOuterTag(ancestor: Node, tagName: string): Node | null {
+    // Revisa si ha llegado al tope del editor
+    if (!ancestor) return null;
+    if (
+      ancestor.nodeType === Node.ELEMENT_NODE &&
+      (ancestor as HTMLElement).id == 'editor'
+    )
+      return null;
+    // Si el nodo no es de tipo elemento, sigue subiendo hasta encontrar el tope
+    if (ancestor.nodeType !== Node.ELEMENT_NODE) {
+      return this.isThereAnOuterTag(ancestor.parentElement as Node, tagName);
+    }
+    // Si el nodo es de tipo elemento pero no es strong, entonces sigue subiendo
+    // Si el nodo es strong, lo retorna
+    if ((ancestor as HTMLElement).tagName !== tagName.toUpperCase()) {
+      return this.isThereAnOuterTag(
+        ancestor.parentElement as HTMLElement,
+        tagName,
+      );
+    } else return ancestor as Node;
+  }
+
+  private findClosestHTMLParent(node: Node): HTMLElement {
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+      return this.findClosestHTMLParent(node.parentElement as Node);
+    } else return node as HTMLElement;
   }
 }
