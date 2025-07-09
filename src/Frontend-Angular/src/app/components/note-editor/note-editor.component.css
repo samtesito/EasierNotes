@@ -53,5 +53,15 @@
   padding-left: 0;
 }
 
+.toolbar button:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+  background-color: transparent;
+}
+
+
+
+
+
 
 
