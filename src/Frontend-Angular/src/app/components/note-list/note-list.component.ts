@@ -66,8 +66,8 @@ export class NoteListComponent implements OnInit {
     if(!category) return;
 
     // Si la categoria ya esta seleccionada, se desmarca
-    if(this.categoriesSelected().some(categ => categ.id === category.id)){
-      this.categoriesSelected.set(this.categoriesSelected().filter(categ => categ.id !== category.id));
+    if(this.categoriesSelected().some(category => category.id === category.id)){
+      this.categoriesSelected.set(this.categoriesSelected().filter(category => category.id !== category.id));
     }
     // Si la categoria no esta seleccionada, se marca
     else{
@@ -79,6 +79,9 @@ export class NoteListComponent implements OnInit {
   toggleCategorySelectorOpen() {
     this.categorySelectorOpen.set(!this.categorySelectorOpen());
     console.log('toggleCategorySelectorOpen', this.categorySelectorOpen());
+    setTimeout(() =>{
+      this.categorySelectorOpen.set(false);
+    },2800)
   }
 
   filterButtonText = computed(() => {
