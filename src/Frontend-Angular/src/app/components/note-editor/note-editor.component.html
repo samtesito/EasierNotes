@@ -66,8 +66,9 @@
         type="button"
         #deleteImageButton
         class="btn btn-light btn-sm me-2"
-        [disabled]="!isEditorFocused()"
         title="Eliminar imagen"
+        (click)="onDeleteImage()"
+        [disabled]="!selectedImage()"
       >
         <img
           src="statics/remove_image.svg"
@@ -76,48 +77,50 @@
         />
       </button>
 
-    <!-- Botón: Guardar -->
-    <button
-      type="button"
-      class="btn btn-light btn-sm"
-      (click)="onSave()"
-      title="Guardar"
-    >
-      <img src="statics/save.svg" alt="Guardar" class="toolbar-icon" />
-    </button>
-
-    <!-- Botón: Cambiar texto a negritas -->
-    <button
+      
+      <!-- Botón: Cambiar texto a negritas -->
+      <button
       type="button"
       #alternateBoldButton
       class="btn btn-light btn-sm"
       [disabled]="!isTextSelected()"
       (click)="onBold()"
       title="Cambiar texto a negrita"
-    >
+      >
       <img
-        src="statics/bold.svg"
-        alt="Cambiar texto a negrita"
-        class="toolbar-icon"
+      src="statics/bold.svg"
+      alt="Cambiar texto a negrita"
+      class="toolbar-icon"
       />
     </button>
-
+    
     <!-- Botón: Cambiar texto a itálica -->
     <button
-      type="button"
-      #alternateItalicButton
-      class="btn btn-light btn-sm"
-      [disabled]="!isTextSelected()"
-      (click)="onItalic()"
-      title="Cambiar texto a itálica"
+    type="button"
+    #alternateItalicButton
+    class="btn btn-light btn-sm"
+    [disabled]="!isTextSelected()"
+    (click)="onItalic()"
+    title="Cambiar texto a itálica"
     >
-      <img
-        src="statics/italic.svg"
-        #piña
-        alt="Cambiar texto a itálica"
-        class="toolbar-icon"
-      />
-    </button>
+    <img
+    src="statics/italic.svg"
+    #piña
+    alt="Cambiar texto a itálica"
+    class="toolbar-icon"
+    />
+  </button>
+  
+  <!-- Botón: Guardar -->
+  <button
+    type="button"
+    class="btn btn-light btn-sm"
+    (click)="onSave()"
+    title="Guardar"
+    [disabled]="selectedImage()"
+  >
+    <img src="statics/save.svg" alt="Guardar" class="toolbar-icon" />
+  </button>
 
     <!-- Input oculto para elegir fichero -->
     <input

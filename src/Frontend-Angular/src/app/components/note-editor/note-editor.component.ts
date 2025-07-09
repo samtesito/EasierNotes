@@ -8,6 +8,8 @@ import {
   ElementRef,
   AfterViewInit,
   signal,
+  HostListener,
+  inject,
 } from '@angular/core';
 
 @Component({
@@ -42,8 +44,11 @@ export class NoteEditorComponent implements AfterViewInit {
   @ViewChild('alternateItalicButton', { static: true })
   private alternateItalicButton!: ElementRef<HTMLButtonElement>;
 
+  el = inject(ElementRef);
+
   isEditorFocused = signal(false);
   isTextSelected = signal(false);
+  selectedImage = signal<HTMLImageElement | null>(null);
 
   ngAfterViewInit() {
     this.editor.nativeElement.innerHTML = this.contentInput;
@@ -78,6 +83,36 @@ export class NoteEditorComponent implements AfterViewInit {
       this.isTextSelected.set(false);
     });
   }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    //SI el click fue fuera del editor, deselecciona todo
+    if(!this.el.nativeElement.contains(target)){
+      console.log('Click fuera del editor');
+      this.selectedImage()?.classList.remove('selected-image');
+      this.selectedImage.set(null);
+    }    
+
+    if(!target.closest('.editor')) return;
+
+    //Deselecciona la imagen anterior
+    this.selectedImage()?.classList.remove('selected-image');
+
+    if(target.closest('img')){
+
+      //Selecciona la nueva imagen
+      this.selectedImage.set(target.closest('img') as HTMLImageElement);
+      this.selectedImage()!.classList.add('selected-image');
+      console.log(this.selectedImage());
+    }
+
+    if(this.selectedImage() && !target.closest('img')){
+      this.selectedImage.set(null);
+    }
+  }
+
 
   onSave() {
     const html = this.editor.nativeElement.innerHTML;
@@ -390,5 +425,11 @@ export class NoteEditorComponent implements AfterViewInit {
       parent.insertBefore(element.firstChild, element);
     }
     parent.removeChild(element);
+  }
+
+  onDeleteImage() {
+    console.log('Eliminando imagen');
+    this.selectedImage()!.remove();
+    this.selectedImage.set(null);
   }
 }
