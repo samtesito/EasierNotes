@@ -249,7 +249,7 @@ export class NoteEditorComponent implements AfterViewInit {
   }
 
   onItalic() {
-    const selection = window.getSelection();
+    /*const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
 
     const range = selection.getRangeAt(0);
@@ -275,10 +275,44 @@ export class NoteEditorComponent implements AfterViewInit {
 
       range.deleteContents();
       range.insertNode(em);
-    }
+    }*/
   }
 
   onBold() {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return;
+
+    const range = selection.getRangeAt(0);
+    if (range.collapsed) return;
+
+    const savedRange = range.cloneRange();
+
+    const fullyBolded = this.isFullyBolded(range);
+
+    // Always remove any inner bold tags first
+    this.unwrapTagsInRange(range, ['strong', 'b']);
+
+    if (!fullyBolded) {
+      const strong = document.createElement('strong');
+      const fragment = savedRange.cloneContents();
+      strong.appendChild(fragment);
+      savedRange.deleteContents();
+      savedRange.insertNode(strong);
+
+      // Create a new range that selects the new <strong> content
+      const newRange = document.createRange();
+      newRange.selectNodeContents(strong);
+      this.restoreSelection(newRange);
+    } else {
+      this.unwrapTagsInRange(range, ['strong', 'b']);
+      this.restoreSelection(savedRange);
+    }
+
+    // Restore selection
+    this.restoreSelection(savedRange);
+
+    /// LEGACY VERSION
+    /*
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0) return;
 
@@ -323,9 +357,78 @@ export class NoteEditorComponent implements AfterViewInit {
       newRange.setStartAfter(strong);
       newRange.collapse(true);
       selection.addRange(newRange);*/
+    ////}
+  }
+
+  private unwrapTagsInRange(range: Range, tagNames: string[]) {
+    const walker = document.createTreeWalker(
+      range.commonAncestorContainer,
+      NodeFilter.SHOW_ELEMENT,
+      {
+        acceptNode: (node) => {
+          const tag = (node as HTMLElement).tagName.toLowerCase();
+          return tagNames.includes(tag) && range.intersectsNode(node)
+            ? NodeFilter.FILTER_ACCEPT
+            : NodeFilter.FILTER_SKIP;
+        },
+      },
+    );
+
+    const nodesToUnwrap: HTMLElement[] = [];
+    let currentNode = walker.nextNode();
+    while (currentNode) {
+      nodesToUnwrap.push(currentNode as HTMLElement);
+      currentNode = walker.nextNode();
+    }
+
+    for (const node of nodesToUnwrap) {
+      const parent = node.parentNode;
+      while (node.firstChild) {
+        parent?.insertBefore(node.firstChild, node);
+      }
+      parent?.removeChild(node);
     }
   }
 
+  private saveSelection(): Range | null {
+    const selection = window.getSelection();
+    return selection?.rangeCount ? selection.getRangeAt(0).cloneRange() : null;
+  }
+
+  private restoreSelection(savedRange: Range | null) {
+    if (!savedRange) return;
+    const selection = window.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(savedRange);
+  }
+
+  private isFullyBolded(range: Range): boolean {
+    const startContainer =
+      range.startContainer.nodeType === Node.TEXT_NODE
+        ? range.startContainer.parentElement
+        : (range.startContainer as HTMLElement);
+
+    const endContainer =
+      range.endContainer.nodeType === Node.TEXT_NODE
+        ? range.endContainer.parentElement
+        : (range.endContainer as HTMLElement);
+
+    if (!startContainer || !endContainer) return false;
+
+    const startBold = startContainer.closest('strong, b');
+    const endBold = endContainer.closest('strong, b');
+
+    // Fully bolded only if both ends are inside the same bold element
+    return (
+      !!startBold &&
+      !!endBold &&
+      startBold === endBold &&
+      startBold.contains(range.commonAncestorContainer)
+    );
+  }
+
+  /////LEGACY VERSION
+  /*
   private findWrappingStrong(
     container: HTMLElement | null,
     range: Range,
@@ -391,4 +494,5 @@ export class NoteEditorComponent implements AfterViewInit {
     }
     parent.removeChild(element);
   }
+    */
 }
