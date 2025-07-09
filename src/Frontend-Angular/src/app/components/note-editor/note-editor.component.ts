@@ -90,15 +90,15 @@ export class NoteEditorComponent implements AfterViewInit {
     const target = event.target as HTMLElement;
 
     //SI el click fue fuera del editor, deselecciona todo
-    if(!this.el.nativeElement.contains(target)){
+    if (!this.el.nativeElement.contains(target)) {
       this.selectedImage()?.classList.remove('selected-image');
       this.selectedImage.set(null);
       this.selectedTable()?.classList.remove('selected-table');
       this.selectedTable.set(null);
-    }    
+    }
 
     //SI el click fue dentro de la toolbar, no hacer nada
-    if(target.closest('.toolbar')) return;
+    if (target.closest('.toolbar')) return;
 
     //Deselecciona la imagen y la tabla anterior
     this.selectedImage()?.classList.remove('selected-image');
@@ -106,21 +106,18 @@ export class NoteEditorComponent implements AfterViewInit {
     this.selectedTable()?.classList.remove('selected-table');
     this.selectedTable.set(null);
 
-    if(target.closest('img')){
-
+    if (target.closest('img')) {
       //Selecciona la nueva imagen
       this.selectedImage.set(target.closest('img') as HTMLImageElement);
       this.selectedImage()!.classList.add('selected-image');
     }
 
-    if(target.closest('table')){
-
+    if (target.closest('table')) {
       //Selecciona la nueva tabla
       this.selectedTable.set(target.closest('table') as HTMLTableElement);
       this.selectedTable()!.classList.add('selected-table');
     }
   }
-
 
   onSave() {
     this.selectedImage()?.classList.remove('selected-image');
@@ -541,7 +538,7 @@ export class NoteEditorComponent implements AfterViewInit {
       parent.insertBefore(element.firstChild, element);
     }
     parent.removeChild(element);
-  }
+  }*/
 
   onDeleteImage() {
     this.selectedImage()!.remove();
