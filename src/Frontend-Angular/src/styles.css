@@ -77,5 +77,23 @@ body {
   font-weight: 500;
 }
 
+::selection {
+  background: #ebebeb !important;
+}
 
+::-moz-selection {
+  background: #ebebeb !important;
+}
+
+.selected-image {
+  border: 2px solid #087E8B !important;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1) !important;
+  border-radius: 10px !important;
+}
+
+.selected-table {
+  border: 2px solid #087E8B !important;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1) !important;
+
+}
 

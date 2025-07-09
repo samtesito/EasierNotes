@@ -8,6 +8,8 @@ import {
   ElementRef,
   AfterViewInit,
   signal,
+  HostListener,
+  inject,
 } from '@angular/core';
 
 @Component({
@@ -42,8 +44,12 @@ export class NoteEditorComponent implements AfterViewInit {
   @ViewChild('alternateItalicButton', { static: true })
   private alternateItalicButton!: ElementRef<HTMLButtonElement>;
 
+  el = inject(ElementRef);
+
   isEditorFocused = signal(false);
   isTextSelected = signal(false);
+  selectedImage = signal<HTMLImageElement | null>(null);
+  selectedTable = signal<HTMLTableElement | null>(null);
 
   ngAfterViewInit() {
     this.editor.nativeElement.innerHTML = this.contentInput;
@@ -79,7 +85,49 @@ export class NoteEditorComponent implements AfterViewInit {
     });
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    //SI el click fue fuera del editor, deselecciona todo
+    if(!this.el.nativeElement.contains(target)){
+      this.selectedImage()?.classList.remove('selected-image');
+      this.selectedImage.set(null);
+      this.selectedTable()?.classList.remove('selected-table');
+      this.selectedTable.set(null);
+    }    
+
+    //SI el click fue dentro de la toolbar, no hacer nada
+    if(target.closest('.toolbar')) return;
+
+    //Deselecciona la imagen y la tabla anterior
+    this.selectedImage()?.classList.remove('selected-image');
+    this.selectedImage.set(null);
+    this.selectedTable()?.classList.remove('selected-table');
+    this.selectedTable.set(null);
+
+    if(target.closest('img')){
+
+      //Selecciona la nueva imagen
+      this.selectedImage.set(target.closest('img') as HTMLImageElement);
+      this.selectedImage()!.classList.add('selected-image');
+    }
+
+    if(target.closest('table')){
+
+      //Selecciona la nueva tabla
+      this.selectedTable.set(target.closest('table') as HTMLTableElement);
+      this.selectedTable()!.classList.add('selected-table');
+    }
+  }
+
+
   onSave() {
+    this.selectedImage()?.classList.remove('selected-image');
+    this.selectedImage.set(null);
+    this.selectedTable()?.classList.remove('selected-table');
+    this.selectedTable.set(null);
+
     const html = this.editor.nativeElement.innerHTML;
     this.save.emit(html);
   }
@@ -494,5 +542,14 @@ export class NoteEditorComponent implements AfterViewInit {
     }
     parent.removeChild(element);
   }
-    */
+
+  onDeleteImage() {
+    this.selectedImage()!.remove();
+    this.selectedImage.set(null);
+  }
+
+  onDeleteTable() {
+    this.selectedTable()!.remove();
+    this.selectedTable.set(null);
+  }
 }

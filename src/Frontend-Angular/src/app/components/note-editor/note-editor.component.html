@@ -30,6 +30,22 @@
       />
     </button>
 
+    <!-- Botón: Eliminar tabla -->
+    <button
+      type="button"
+      #deleteTableButton
+      class="btn btn-light btn-sm me-2"
+      (click)="onDeleteTable()"
+      [disabled]="!selectedTable()"
+      title="Eliminar tabla"
+    >
+      <img
+        src="statics/remove_table.svg"
+        alt="Eliminar tabla"
+        class="toolbar-icon"
+      />
+    </button>
+
     <!-- Botón: Insertar imagen -->
     <button
       type="button"
@@ -40,54 +56,72 @@
       title="Insertar imagen"
     >
       <img
-        src="statics/picture.svg"
+        src="statics/add_image.svg"
         alt="Insertar imagen"
         class="toolbar-icon"
       />
     </button>
 
-    <!-- Botón: Guardar -->
-    <button
-      type="button"
-      class="btn btn-light btn-sm"
-      (click)="onSave()"
-      title="Guardar"
-    >
-      <img src="statics/save.svg" alt="Guardar" class="toolbar-icon" />
-    </button>
+        <!-- Botón: Eliminar imagen -->
+        <button
+        type="button"
+        #deleteImageButton
+        class="btn btn-light btn-sm me-2"
+        title="Eliminar imagen"
+        (click)="onDeleteImage()"
+        [disabled]="!selectedImage()"
+      >
+        <img
+          src="statics/remove_image.svg"
+          alt="Eliminar imagen"
+          class="toolbar-icon"
+        />
+      </button>
 
-    <!-- Botón: Cambiar texto a negritas -->
-    <button
+      
+      <!-- Botón: Cambiar texto a negritas -->
+      <button
       type="button"
       #alternateBoldButton
       class="btn btn-light btn-sm"
       [disabled]="!isTextSelected()"
       (click)="onBold()"
       title="Cambiar texto a negrita"
-    >
+      >
       <img
-        src="statics/bold.svg"
-        alt="Cambiar texto a negrita"
-        class="toolbar-icon"
+      src="statics/bold.svg"
+      alt="Cambiar texto a negrita"
+      class="toolbar-icon"
       />
     </button>
-
+    
     <!-- Botón: Cambiar texto a itálica -->
     <button
-      type="button"
-      #alternateItalicButton
-      class="btn btn-light btn-sm"
-      [disabled]="!isTextSelected()"
-      (click)="onItalic()"
-      title="Cambiar texto a itálica"
+    type="button"
+    #alternateItalicButton
+    class="btn btn-light btn-sm"
+    [disabled]="!isTextSelected()"
+    (click)="onItalic()"
+    title="Cambiar texto a itálica"
     >
-      <img
-        src="statics/italic.svg"
-        #piña
-        alt="Cambiar texto a itálica"
-        class="toolbar-icon"
-      />
-    </button>
+    <img
+    src="statics/italic.svg"
+    #piña
+    alt="Cambiar texto a itálica"
+    class="toolbar-icon"
+    />
+  </button>
+  
+  <!-- Botón: Guardar -->
+  <button
+    type="button"
+    class="btn btn-light btn-sm"
+    (click)="onSave()"
+    title="Guardar"
+    
+  >
+    <img src="statics/save.svg" alt="Guardar" class="toolbar-icon" />
+  </button>
 
     <!-- Input oculto para elegir fichero -->
     <input
