@@ -72,14 +72,23 @@
     (dblclick)="openNote(note.id!)"
     [class.selected-note]="isSelected(note)"
   >
-    <div class="card-body">
-      <app-note-name
-        [currentName]="note.name"
-        [viewMode]="'List'"
-        (newName)="changeNoteName($event, note)"
-      >
-      </app-note-name>
-      <p class="card-text">{{ displayContentOverview(note.html, 100) }}</p>
+    <div class="card-body m-2">
+      <div class="d-flex justify-content-between">
+        <app-note-name
+          class="w-100"
+          [currentName]="note.name"
+          [viewMode]="'List'"
+          (newName)="changeNoteName($event, note)"
+        >
+        </app-note-name>
+        <select class="form-select w-25" [id]="`select-category-${note.id}`" [(ngModel)]="note.categoryId"
+            (change)="changeCategory(note, $event.target)">
+          @for(category of categoriesService.Categories(); track category.id) {
+          <option [value]="category.id">{{ category.name }}</option>
+          }
+        </select>
+      </div>
+      <p class="card-text mt-3">{{ displayContentOverview(note.html, 100) }}</p>
     </div>
   </div>
   }

@@ -16,15 +16,16 @@ import { NoteNameComponent } from '../note-name/note-name.component';
 import { displayContentOverview } from '../../helpers/showNoteOverview';
 import { CategoriesService } from '../../services/categories.service';
 import { Category } from '../../models/Category';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-note-list',
-  imports: [NoteNameComponent],
+  imports: [NoteNameComponent, FormsModule],
   templateUrl: './note-list.component.html',
   styleUrl: './note-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NoteListComponent implements OnInit {
+export class NoteListComponent implements OnInit, AfterViewInit {
   notesService = inject(NotesService);
   categoriesService = inject(CategoriesService);
   modalService = inject(ModalService);
@@ -36,9 +37,14 @@ export class NoteListComponent implements OnInit {
   displayContentOverview = displayContentOverview;
 
   ngOnInit() {
-    // Si no se ha cargado el listado de categorias con notas, se obtienen
+    //Se obtienen todas las notas
+    if(this.notesService.notes().length === 0){
+      this.notesService.getAllNotes();
+    }
+
+    //Se obtienen todas las categorias
     if(this.categoriesService.Categories().length === 0){
-      this.categoriesService.obtainAll();
+      this.categoriesService.getAllCategories();
     }
 
     // Si se ha seleccionado una categoria, se obtienen las notas de la categoria
@@ -49,6 +55,14 @@ export class NoteListComponent implements OnInit {
 
     //Se reestablece la categoria seleccionada
     this.categoriesService.CategoryOpened.set(null);
+
+  }
+  ngAfterViewInit() {
+    //Se actualizan los select de las notas
+    this.notes().forEach(note => {
+      const select = document.getElementById(`select-category-${note.id}`) as HTMLSelectElement;
+      if(select) select.value = this.getCategoryName(note.categoryId);
+    });
   }
 
   @HostListener('document:click', ['$event'])
@@ -60,11 +74,10 @@ export class NoteListComponent implements OnInit {
   }
 
   notes = computed(() =>{
-    const notes = this.categoriesService.Categories().flatMap(category => category.notes);
 
     // Se filtran las notas por las categorias seleccionadas
-    const notesFilteredByCategory = this.categoriesSelected().length > 0 ? notes.filter(note => 
-        this.categoriesSelected().some(category => category.id === note.categoryId)) : notes;
+    const notesFilteredByCategory = this.categoriesSelected().length > 0 ? this.notesService.notes().filter(note => 
+        this.categoriesSelected().some(category => category.id === note.categoryId)) : this.notesService.notes();
 
     //Luego, se filtran por el termino de busqueda
     if(this.searchTerm().length === 0) return notesFilteredByCategory;
@@ -121,7 +134,17 @@ export class NoteListComponent implements OnInit {
   
   selectedNote = signal<Note | null>(null);
   
-  
+  getCategoryName(categoryId: number): string {
+    const category = this.categoriesService.Categories().find(category => category.id === categoryId);
+    return category?.name || '';
+  }
+
+  changeCategory(note: Note, eventTarget: any) {
+    const value = eventTarget.value;
+    const categoryId = parseInt(value);
+    if(!categoryId) return;
+    this.notesService.addToCategory(note, categoryId);
+  }
 
 
   updateSearchTerm(value: string | null) {

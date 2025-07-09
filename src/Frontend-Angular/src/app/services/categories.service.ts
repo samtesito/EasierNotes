@@ -16,7 +16,7 @@ export class CategoriesService {
 
   Categories = signal<Category[]>([]);
 
-  public obtainAll(): void {
+  public getAllCategories(): void {
     this.http.get<Category[]>(this.URLbase).subscribe((response) => 
       { 
         this.Categories.set(response);
