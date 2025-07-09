@@ -296,16 +296,26 @@ export class NoteEditorComponent implements AfterViewInit {
 
     if (strongWrapper) {
       // Quita los tags <strong> que envuelven al elemento
+      const newRange = document.createRange();
+      newRange.selectNodeContents(strongWrapper);
       this.unwrapElement(strongWrapper);
+      selection.removeAllRanges();
+      selection.addRange(newRange);
     } else {
-      // Envuelve el texto en <strong>
+      // Clona la selección de texto
       const fragment = range.cloneContents();
       const strong = document.createElement('strong');
+      // Guarda el rango
+      const newRange = document.createRange();
+      newRange.selectNodeContents(strong);
+      // Envuelve el texto en <strong>
       strong.appendChild(fragment);
-
+      // Reemplaza el texto editado
       range.deleteContents();
       range.insertNode(strong);
-
+      // Reselecciona el nuevo contenido envuelto en el <strong> tag
+      selection.removeAllRanges();
+      selection.addRange(newRange);
       // Move cursor after the inserted node
       /*
       selection.removeAllRanges();
