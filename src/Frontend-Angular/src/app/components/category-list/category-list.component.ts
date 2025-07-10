@@ -19,7 +19,7 @@ export class CategoryListComponent implements OnInit {
   router = inject(Router);
 
   ngOnInit() {
-    this.categoriesService.getAllCategories();
+      this.categoriesService.getAllCategories();
   }
 
   categories = computed(() => {

@@ -38,9 +38,7 @@ export class NoteListComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     //Se obtienen todas las notas
-    if(this.notesService.notes().length === 0){
-      this.notesService.getAllNotes();
-    }
+    this.notesService.getAllNotes();
 
     //Se obtienen todas las categorias
     if(this.categoriesService.Categories().length === 0){

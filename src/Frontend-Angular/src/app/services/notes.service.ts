@@ -18,6 +18,10 @@ export class NotesService {
 
   notes = signal<Note[]>([]);
 
+  constructor() {
+      this.getAllNotes();
+  }
+
   public getAllNotes(): void{
     this.http.get<Note[]>(`${this.URLbase}`).subscribe(notes => {
       this.notes.set(notes);
@@ -26,6 +30,7 @@ export class NotesService {
   public create() {
     this.http.post<Note>(`${this.URLbase}/create`, {}).subscribe((response) => {
       this.notes.set([...this.notes(), response]);
+      this.router.navigate([`/note/${response.id}`]);
     });
   }
 

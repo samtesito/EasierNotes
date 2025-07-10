@@ -27,6 +27,7 @@ export class NoteDetailComponent {
     const idParam = this.route.snapshot.paramMap.get('id');
     const noteId = idParam ? +idParam : NaN;
     this.noteService.getNoteById(noteId).subscribe(note => this.note = note);
+    this.categoriesService.getAllCategories();
   }
 
   changeNoteName(newName: string) {
