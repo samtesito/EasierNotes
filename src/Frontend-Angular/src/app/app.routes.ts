@@ -4,12 +4,16 @@ export const routes: Routes = [
 
     {
         path: '',   
-        redirectTo: 'notes',
+        redirectTo: 'categories',
         pathMatch: 'full'
     },
     {
         path: 'notes',
         loadComponent: () => import('./components/note-list/note-list.component').then(r => r.NoteListComponent)
+    },
+    {
+        path: 'categories',
+        loadComponent: () => import('./components/category-list/category-list.component').then(r => r.CategoryListComponent)
     },
     {
         path: 'note/:id',
@@ -19,6 +23,6 @@ export const routes: Routes = [
     //Fallback 
     {
         path:'**',
-        redirectTo: 'notes',
+        redirectTo: 'categories',
     }
 ];

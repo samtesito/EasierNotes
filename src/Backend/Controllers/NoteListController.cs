@@ -28,7 +28,7 @@ namespace backend.Controllers
             return Ok(notes);
         }
 
-        [HttpGet("{id:long}", Name = "GetNoteById")]
+        [HttpGet("{id:long}")]
         public async Task<ActionResult<Note>> GetById([FromRoute] long id)
         {
             _logger.LogInformation("GET api/notes/{Id} called", id);
@@ -42,58 +42,53 @@ namespace backend.Controllers
             return Ok(note);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Note>> Create([FromBody] Note note)
+        [HttpPost("create")]
+        public async Task<ActionResult<Note>> Create()
         {
-            _logger.LogInformation("POST api/notes called with {@Note}", note);
-            _context.Notes.Add(note);
-            await _context.SaveChangesAsync();
-            _logger.LogInformation("Created note with id {Id}", note.Id);
+          var defaultNamesQty = await _context.Notes.CountAsync(n => n.Name.StartsWith("Nueva Nota"));
 
-            return CreatedAtRoute("GetNoteById", new { id = note.Id }, note);
+          var note = new Note {
+            Name = defaultNamesQty > 0 ? $"Nueva Nota ({defaultNamesQty + 1})" : "Nueva Nota",
+            Html = "<p> Comienza a plasmar tus ideas aquí...</p>",
+            CategoryId = 1
+          };
+         
+          _context.Notes.Add(note);
+          await _context.SaveChangesAsync();
+          return Ok(note);
         }
 
-        [HttpPut("{id:long}")]
+        [HttpPut("update")]
         public async Task<IActionResult> Update(
-            [FromRoute] long id,
             [FromBody] Note noteDto)
         {
-            _logger.LogInformation("PUT api/notes/{Id} called with {@NoteDto}", id, noteDto);
+            _logger.LogInformation("PUT api/notes/{Id} called with {@NoteDto}", noteDto.Id, noteDto);
 
-            if (id != noteDto.Id)
-            {
-                _logger.LogWarning("URL id ({UrlId}) does not match body id ({BodyId})", id, noteDto.Id);
-                return BadRequest("El ID de la URL y del payload no coinciden.");
-            }
-
-            var existing = await _context.Notes.FindAsync(id);
+            var existing = await _context.Notes.FindAsync(noteDto.Id);
             if (existing == null)
             {
-                _logger.LogWarning("Note with id {Id} not found", id);
+                _logger.LogWarning("Note with id {Id} not found", noteDto.Id);
                 return NotFound();
             }
 
-            // Actualizamos solo los campos permitidos
             existing.Name       = noteDto.Name;
             existing.Html       = noteDto.Html;
-            // Si quisieras actualizar la categoría:
-            // existing.CategoryId = noteDto.CategoryId;
 
             try
             {
                 await _context.SaveChangesAsync();
-                _logger.LogInformation("Updated note with id {Id}", id);
+                _logger.LogInformation("Updated note with id {Id}", noteDto.Id);
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Error saving changes for note {Id}", id);
-                throw; // o return StatusCode(500, "Error al guardar la nota");
+                _logger.LogError(ex, "Error saving changes for note {Id}", noteDto.Id);
+                throw;
             }
 
             return NoContent();
         }
 
-        [HttpDelete("{id:long}")]
+        [HttpDelete("delete/{id:long}")]
         public async Task<IActionResult> Delete([FromRoute] long id)
         {
             _logger.LogInformation("DELETE api/notes/{Id} called", id);
@@ -108,6 +103,34 @@ namespace backend.Controllers
             _context.Notes.Remove(existing);
             await _context.SaveChangesAsync();
             _logger.LogInformation("Deleted note with id {Id}", id);
+
+            return NoContent();
+        }
+
+        [HttpPatch("addToCategory/{noteId:long}/{categoryId:long}")]
+        public async Task<IActionResult> AddToCategory([FromRoute] long noteId, [FromRoute] long categoryId)
+        {
+            _logger.LogInformation("POST api/notes/addToCategory/{NoteId}/{CategoryId} called", noteId, categoryId);
+
+            var note = await _context.Notes.FindAsync(noteId);
+            if (note == null)
+            {
+                _logger.LogWarning("Note with id {Id} not found", noteId);
+                return NotFound();
+            }
+
+            note.CategoryId = categoryId;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Added note {NoteId} to category {CategoryId}", noteId, categoryId);
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, "Error saving changes for note {Id}", noteId);
+                throw;
+            }
 
             return NoContent();
         }
