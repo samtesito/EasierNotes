@@ -1,6 +1,7 @@
 # EasierNotes
-Aplicación de notas inspirada en Notion desarrollada como proyecto para la materia "Ingeniería de Software" de la Universidad Católica Andrés Bello.
-Desarrollado por:
+Aplicación de notas inspirada en Notion, desarrollada como proyecto para la materia "Ingeniería de Software" de la Universidad Católica Andrés Bello (UCAB). Desarrollo realizado en Angular y .NET.
+
+Autores:
 - Javier Díaz.
 - Matías León.
 - Samuel Parra.
